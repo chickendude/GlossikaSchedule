@@ -20,7 +20,7 @@ import ch.ralena.glossikaschedule.object.ScheduleData;
  * Created by crater-windoze on 12/27/2016.
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClickedListener {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String CURRENT_DAY = "current_day";
 
@@ -36,7 +36,7 @@ public class MainFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
 		// set up recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.scheduleRecyclerView);
-		ScheduleAdapter scheduleAdapter = new ScheduleAdapter(mSchedule.getSchedule());
+		ScheduleAdapter scheduleAdapter = new ScheduleAdapter(mSchedule.getSchedule(), this);
 		recyclerView.setAdapter(scheduleAdapter);
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
 		recyclerView.setLayoutManager(layoutManager);
@@ -46,14 +46,16 @@ public class MainFragment extends Fragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		showDay(getCurrentDay());
+	}
+
+	public void showDay(Day day) {
 		DayFragment dayFragment = new DayFragment();
-		dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, 0);
+		dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
 		Bundle bundle = new Bundle();
-		Day day = getCurrentDay();
 		bundle.putParcelable(CURRENT_DAY, day);
 		dayFragment.setArguments(bundle);
 		dayFragment.show(getFragmentManager(), null);
-
 	}
 
 	private void findCurrentDay() {
@@ -81,5 +83,10 @@ public class MainFragment extends Fragment {
 			index = 0;
 		}
 		return mSchedule.getSchedule().get(index);
+	}
+
+	@Override
+	public void onItemClicked(Day day) {
+		showDay(day);
 	}
 }

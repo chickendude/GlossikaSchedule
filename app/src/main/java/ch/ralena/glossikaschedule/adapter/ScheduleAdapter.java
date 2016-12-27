@@ -16,10 +16,15 @@ import ch.ralena.glossikaschedule.object.Day;
  */
 
 public class ScheduleAdapter extends RecyclerView.Adapter {
+	public interface OnItemClickedListener {
+		void onItemClicked(Day day);
+	}
 	ArrayList<Day> mDays;
+	OnItemClickedListener mListener;
 
-	public ScheduleAdapter(ArrayList<Day> days) {
+	public ScheduleAdapter(ArrayList<Day> days, OnItemClickedListener listener) {
 		mDays = days;
+		mListener = listener;
 	}
 
 	@Override
@@ -40,13 +45,24 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
 		TextView mDayLabel;
+		Day mDay;
+
 		public ViewHolder(View view) {
 			super(view);
 			mDayLabel = (TextView) view.findViewById(R.id.dayLabel);
+			mDayLabel.setOnClickListener(mOnClickListener);
 		}
 
 		public void bindView(Day day) {
 			mDayLabel.setText(day.getDayNumber()+"");
+			mDay = day;
 		}
+
+		View.OnClickListener mOnClickListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mListener.onItemClicked(mDay);
+			}
+		};
 	}
 }

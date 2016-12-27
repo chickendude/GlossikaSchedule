@@ -25,6 +25,7 @@ public class DayFragment extends DialogFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		getDialog().setCanceledOnTouchOutside(true);
 		// get our parameters
 		Bundle bundle = getArguments();
 		Day day = bundle.getParcelable(MainFragment.CURRENT_DAY);
