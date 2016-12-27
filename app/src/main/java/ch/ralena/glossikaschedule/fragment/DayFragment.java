@@ -3,6 +3,7 @@ package ch.ralena.glossikaschedule.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ch.ralena.glossikaschedule.R;
+import ch.ralena.glossikaschedule.adapter.DayAdapter;
 import ch.ralena.glossikaschedule.object.Day;
 
 /**
@@ -32,8 +34,10 @@ public class DayFragment extends DialogFragment {
 		mDayLabel.setText("Day " + day.getDayNumber());
 		// set up recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
-//		recyclerView.setAdapter();
+		DayAdapter adapter = new DayAdapter(day.getStudyItems());
+		recyclerView.setAdapter(adapter);
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		recyclerView.setLayoutManager(layoutManager);
 		return view;
 	}
 }

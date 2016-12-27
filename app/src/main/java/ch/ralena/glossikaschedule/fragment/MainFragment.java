@@ -2,6 +2,7 @@ package ch.ralena.glossikaschedule.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,7 @@ public class MainFragment extends Fragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		DayFragment dayFragment = new DayFragment();
+		dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, 0);
 		Bundle bundle = new Bundle();
 		Day day = getCurrentDay();
 		bundle.putParcelable(CURRENT_DAY, day);

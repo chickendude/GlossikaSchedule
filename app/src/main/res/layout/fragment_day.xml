@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
+			  android:padding="10dp"
+			  android:background="@drawable/schedule_item_background"
 			  android:orientation="vertical">
 
 	<TextView
 		android:id="@+id/dayLabel"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="TextView"
-		android:textSize="26sp"/>
+		android:textAlignment="center"
+		android:textSize="26sp"
+		tools:text="Day 1"/>
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/recyclerView"
