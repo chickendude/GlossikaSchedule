@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
+import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.ScheduleData;
 
@@ -20,14 +21,16 @@ import ch.ralena.glossikaschedule.object.ScheduleData;
 
 public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
+	public static final String CURRENT_DAY = "current_day";
 
-	Schedule mSchedule;
-
+	private Schedule mSchedule;
+	private int mCurrentDay = -1;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		createSchedule();
+		findCurrentDay();
 
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
 		// set up recycler view
@@ -39,6 +42,28 @@ public class MainFragment extends Fragment {
 		return view;
 	}
 
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		DayFragment dayFragment = new DayFragment();
+		Bundle bundle = new Bundle();
+		Day day = getCurrentDay();
+		bundle.putParcelable(CURRENT_DAY, day);
+		dayFragment.setArguments(bundle);
+		dayFragment.show(getFragmentManager(), null);
+
+	}
+
+	private void findCurrentDay() {
+		for (Day day : mSchedule.getSchedule()) {
+			if (day.isCompleted()) {
+				mCurrentDay = day.getDayNumber();
+				return;
+			}
+		}
+	}
+
+
 	private void createSchedule() {
 		// 5 month intensive
 		mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE);
@@ -46,5 +71,13 @@ public class MainFragment extends Fragment {
 
 	private String formatNumber(int num, int numDigits) {
 		return String.format("%0" + numDigits + "d", num);
+	}
+
+	private Day getCurrentDay() {
+		int index = mCurrentDay;
+		if(index < 0) {
+			index = 0;
+		}
+		return mSchedule.getSchedule().get(index);
 	}
 }
