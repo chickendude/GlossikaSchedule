@@ -158,7 +158,7 @@ public class ScheduleData {
 
 	public static final int SCHEDULE_5_INTENSIVE = 0;
 
-	public static Schedule createSchedule(int scheduleType) {
+	public static Schedule createSchedule(int scheduleType, String language) {
 		String[][] scheduleString;
 		String scheduleTitle;
 		switch (scheduleType) {
@@ -172,7 +172,7 @@ public class ScheduleData {
 				break;
 		}
 
-		Schedule schedule = new Schedule(scheduleTitle, Language.CANTONESE);
+		Schedule schedule = new Schedule(scheduleTitle, language);
 		int day = 1;
 		for(String[] dayItems : ScheduleData.SCHEDULE_5_INTENSIVE_STRINGS) {
 			ArrayList<StudyItem> studyItems = new ArrayList<>();

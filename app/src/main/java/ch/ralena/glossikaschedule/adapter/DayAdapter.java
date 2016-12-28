@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 
@@ -39,14 +40,26 @@ public class DayAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
+		StudyItem mStudyItem;
 		CheckBox fileCheckBox;
+
 		public ViewHolder(View view) {
 			super(view);
 			fileCheckBox = (CheckBox) view.findViewById(R.id.fileCheckBox);
+			fileCheckBox.setOnCheckedChangeListener(mCheckedChangeListener);
 		}
 
 		public void bindView(StudyItem studyItem) {
+			mStudyItem = studyItem;
 			fileCheckBox.setText(studyItem.getTitle());
+			fileCheckBox.setChecked(studyItem.isCompleted());
 		}
+
+		CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+				mStudyItem.setCompleted(isChecked);
+			}
+		};
 	}
 }

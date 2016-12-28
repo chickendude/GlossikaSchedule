@@ -6,7 +6,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
 import ch.ralena.glossikaschedule.object.Day;
+import ch.ralena.glossikaschedule.object.Language;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.ScheduleData;
 import ch.ralena.glossikaschedule.sql.SqlManager;
@@ -73,21 +73,14 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		}
 	}
 
-
 	private void createSchedule() {
 		ArrayList<Schedule> schedules = mSqlManager.getSchedule();
 		if (schedules.size() == 0) {
-			Log.d(TAG, "null");
-			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE);
+			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE, Language.CANTONESE);
 			mSqlManager.createSchedule(mSchedule);
 		} else {
-			Log.d(TAG, "not null");
 			mSchedule = schedules.get(0);
 		}
-	}
-
-	private String formatNumber(int num, int numDigits) {
-		return String.format("%0" + numDigits + "d", num);
 	}
 
 	private Day getCurrentDay() {
