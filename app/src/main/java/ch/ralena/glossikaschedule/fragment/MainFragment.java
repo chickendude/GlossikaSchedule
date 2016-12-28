@@ -18,6 +18,7 @@ import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.Language;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.ScheduleData;
+import ch.ralena.glossikaschedule.object.StudyItem;
 import ch.ralena.glossikaschedule.sql.SqlManager;
 
 /**
@@ -31,6 +32,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	SqlManager mSqlManager;
 	private Schedule mSchedule;
 	private int mCurrentDay = -1;
+	private ScheduleAdapter mAdapter;
 
 	@Nullable
 	@Override
@@ -42,8 +44,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
 		// set up recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.scheduleRecyclerView);
-		ScheduleAdapter scheduleAdapter = new ScheduleAdapter(mSchedule.getSchedule(), this);
-		recyclerView.setAdapter(scheduleAdapter);
+		mAdapter = new ScheduleAdapter(mSchedule.getSchedule(), this, getContext());
+		recyclerView.setAdapter(mAdapter);
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
 		recyclerView.setLayoutManager(layoutManager);
 		return view;
@@ -66,8 +68,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 
 	private void findCurrentDay() {
 		for (Day day : mSchedule.getSchedule()) {
-			if (day.isCompleted()) {
-				mCurrentDay = day.getDayNumber();
+			mCurrentDay = day.getDayNumber() - 1;
+			if (!day.isCompleted()) {
 				return;
 			}
 		}
@@ -94,5 +96,15 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	@Override
 	public void onItemClicked(Day day) {
 		showDay(day);
+	}
+
+	public void saveDay(Day day) {
+		boolean isCompleted = true;
+		for (StudyItem studyItem : day.getStudyItems()) {
+			isCompleted = isCompleted & studyItem.isCompleted();
+		}
+		day.setCompleted(isCompleted);
+		mAdapter.notifyDataSetChanged();
+		mSqlManager.updateDay(day);
 	}
 }

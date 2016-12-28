@@ -80,9 +80,10 @@ public class SqlManager {
 		ArrayList<StudyItem> studyItems = new ArrayList<>();
 		if (studyCursor.moveToFirst()) {
 			do {
+				long id = getLong(studyCursor, BaseColumns._ID);
 				String description = getString(studyCursor, SqlHelper.COL_STUDY_DESCRIPTION);
 				boolean completed = getInt(studyCursor, SqlHelper.COL_STUDY_COMPLETED) > 0;
-				studyItems.add(new StudyItem(description, completed));
+				studyItems.add(new StudyItem(description, completed, id));
 			} while (studyCursor.moveToNext());
 		}
 
@@ -125,6 +126,7 @@ public class SqlManager {
 				studyValues.put(SqlHelper.COL_STUDY_COMPLETED, studyItem.isCompleted());
 				studyValues.put(SqlHelper.COL_STUDY_FOREIGNKEY_DAY, dayId);
 				long studyId = database.insert(SqlHelper.TABLE_STUDY_ITEM, null, studyValues);
+				studyItem.setId(studyId);
 			}
 		}
 
@@ -135,4 +137,21 @@ public class SqlManager {
 		return scheduleId;
 	}
 
+	public void updateDay(Day day) {
+		SQLiteDatabase database = mSqlHelper.getWritableDatabase();
+		database.beginTransaction();
+
+		for (StudyItem studyItem : day.getStudyItems()) {
+			ContentValues studyValues = new ContentValues();
+			studyValues.put(SqlHelper.COL_STUDY_COMPLETED, studyItem.isCompleted());
+
+			String whereClause = BaseColumns._ID + "=?";
+			String[] whereArgs = new String[]{String.valueOf(studyItem.getId())};
+			database.update(SqlHelper.TABLE_STUDY_ITEM, studyValues, whereClause, whereArgs);
+		}
+		// close
+		database.setTransactionSuccessful();
+		database.endTransaction();
+		database.close();
+	}
 }

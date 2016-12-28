@@ -39,6 +39,8 @@ public class DayAdapter extends RecyclerView.Adapter {
 		return mStudyItems.size();
 	}
 
+
+
 	private class ViewHolder extends RecyclerView.ViewHolder {
 		StudyItem mStudyItem;
 		CheckBox fileCheckBox;

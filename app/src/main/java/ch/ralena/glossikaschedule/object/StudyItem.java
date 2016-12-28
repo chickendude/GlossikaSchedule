@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class StudyItem implements Parcelable {
+	long mId;
 	String mTitle;
 	boolean mIsCompleted;
 
@@ -24,6 +25,12 @@ public class StudyItem implements Parcelable {
 	public StudyItem(String title, boolean isCompleted) {
 		mTitle = title;
 		mIsCompleted = isCompleted;
+	}
+
+	public StudyItem(String title, boolean isCompleted, long id) {
+		mTitle = title;
+		mIsCompleted = isCompleted;
+		mId = id;
 	}
 
 	public static final Creator<StudyItem> CREATOR = new Creator<StudyItem>() {
@@ -53,6 +60,14 @@ public class StudyItem implements Parcelable {
 
 	public void setCompleted(boolean completed) {
 		mIsCompleted = completed;
+	}
+
+	public long getId() {
+		return mId;
+	}
+
+	public void setId(long id) {
+		mId = id;
 	}
 
 	@Override

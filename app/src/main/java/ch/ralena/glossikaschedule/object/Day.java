@@ -17,6 +17,10 @@ public class Day implements Parcelable {
 	public Day(ArrayList<StudyItem> studyItems, int dayNumber) {
 		mStudyItems = studyItems;
 		mDayNumber = dayNumber;
+		mIsCompleted = true;
+		for (StudyItem studyItem : studyItems) {
+			mIsCompleted = mIsCompleted & studyItem.isCompleted();
+		}
 	}
 
 	protected Day(Parcel in) {

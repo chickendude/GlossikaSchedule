@@ -1,9 +1,12 @@
 package ch.ralena.glossikaschedule.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,10 +24,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 	ArrayList<Day> mDays;
 	OnItemClickedListener mListener;
+	Context mContext;
 
-	public ScheduleAdapter(ArrayList<Day> days, OnItemClickedListener listener) {
+	public ScheduleAdapter(ArrayList<Day> days, OnItemClickedListener listener, Context context) {
 		mDays = days;
 		mListener = listener;
+		mContext = context;
 	}
 
 	@Override
@@ -44,11 +49,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
+		LinearLayout mLayout;
 		TextView mDayLabel;
 		Day mDay;
 
 		public ViewHolder(View view) {
 			super(view);
+			mLayout = (LinearLayout) view;
 			mDayLabel = (TextView) view.findViewById(R.id.dayLabel);
 			mDayLabel.setOnClickListener(mOnClickListener);
 		}
@@ -56,6 +63,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		public void bindView(Day day) {
 			mDayLabel.setText(day.getDayNumber()+"");
 			mDay = day;
+			if (day.isCompleted()) {
+				mLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.schedule_item_complete_background));
+			} else {
+				mLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.schedule_item_background));
+			}
 		}
 
 		View.OnClickListener mOnClickListener = new View.OnClickListener() {
