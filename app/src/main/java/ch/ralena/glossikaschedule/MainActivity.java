@@ -12,6 +12,7 @@ import ch.ralena.glossikaschedule.sql.SqlManager;
 public class MainActivity extends AppCompatActivity implements DayFragment.OnDialogDismissedListener {
 
 	private static final String MAIN_FRAGMENT_TAG = "main_fragment";
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	MainFragment mMainFragment;
 	private SqlManager mSqlManager;

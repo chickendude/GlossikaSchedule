@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +29,25 @@ import ch.ralena.glossikaschedule.sql.SqlManager;
 public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClickedListener {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String CURRENT_DAY = "current_day";
+	private static final String TAG_DIALOG_OPEN = "dialog_open";
 
 	SqlManager mSqlManager;
 	private Schedule mSchedule;
 	private int mCurrentDay = -1;
 	private ScheduleAdapter mAdapter;
+	private boolean mIsDialogOpen;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mSqlManager = new SqlManager(getContext());
+
+		if (savedInstanceState != null) {
+			mIsDialogOpen = savedInstanceState.getBoolean(TAG_DIALOG_OPEN);
+		} else {
+			mIsDialogOpen = false;
+		}
+
 		createSchedule();
 		findCurrentDay();
 
@@ -52,12 +62,24 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(TAG_DIALOG_OPEN, mIsDialogOpen);
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		showDay(getCurrentDay());
+		if (savedInstanceState == null) {
+			if (!mIsDialogOpen) {
+				Log.d(TAG, "Create Dialog");
+				showDay(getCurrentDay());
+			}
+		}
 	}
 
 	public void showDay(Day day) {
+		mIsDialogOpen = true;
 		DayFragment dayFragment = new DayFragment();
 		dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
 		Bundle bundle = new Bundle();
@@ -87,7 +109,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 
 	private Day getCurrentDay() {
 		int index = mCurrentDay;
-		if(index < 0) {
+		if (index < 0) {
 			index = 0;
 		}
 		return mSchedule.getSchedule().get(index);
@@ -99,6 +121,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	public void saveDay(Day day) {
+		mIsDialogOpen = false;
 		boolean isCompleted = true;
 		for (StudyItem studyItem : day.getStudyItems()) {
 			isCompleted = isCompleted & studyItem.isCompleted();
