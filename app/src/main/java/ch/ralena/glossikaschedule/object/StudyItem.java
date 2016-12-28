@@ -21,6 +21,11 @@ public class StudyItem implements Parcelable {
 		mIsCompleted = in.readByte() != 0;
 	}
 
+	public StudyItem(String title, boolean isCompleted) {
+		mTitle = title;
+		mIsCompleted = isCompleted;
+	}
+
 	public static final Creator<StudyItem> CREATOR = new Creator<StudyItem>() {
 		@Override
 		public StudyItem createFromParcel(Parcel in) {
@@ -32,6 +37,7 @@ public class StudyItem implements Parcelable {
 			return new StudyItem[size];
 		}
 	};
+
 
 	public String getTitle() {
 		return mTitle;

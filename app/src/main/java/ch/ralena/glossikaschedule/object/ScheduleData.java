@@ -172,7 +172,7 @@ public class ScheduleData {
 				break;
 		}
 
-		Schedule schedule = new Schedule(scheduleTitle);
+		Schedule schedule = new Schedule(scheduleTitle, Language.CANTONESE);
 		int day = 1;
 		for(String[] dayItems : ScheduleData.SCHEDULE_5_INTENSIVE_STRINGS) {
 			ArrayList<StudyItem> studyItems = new ArrayList<>();

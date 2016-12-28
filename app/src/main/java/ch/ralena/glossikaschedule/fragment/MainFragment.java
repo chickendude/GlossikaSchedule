@@ -6,15 +6,19 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
 import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.ScheduleData;
+import ch.ralena.glossikaschedule.sql.SqlManager;
 
 /**
  * Created by crater-windoze on 12/27/2016.
@@ -24,12 +28,14 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String CURRENT_DAY = "current_day";
 
+	SqlManager mSqlManager;
 	private Schedule mSchedule;
 	private int mCurrentDay = -1;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mSqlManager = new SqlManager(getContext());
 		createSchedule();
 		findCurrentDay();
 
@@ -69,8 +75,15 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 
 
 	private void createSchedule() {
-		// 5 month intensive
-		mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE);
+		ArrayList<Schedule> schedules = mSqlManager.getSchedule();
+		if (schedules.size() == 0) {
+			Log.d(TAG, "null");
+			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE);
+			mSqlManager.createSchedule(mSchedule);
+		} else {
+			Log.d(TAG, "not null");
+			mSchedule = schedules.get(0);
+		}
 	}
 
 	private String formatNumber(int num, int numDigits) {

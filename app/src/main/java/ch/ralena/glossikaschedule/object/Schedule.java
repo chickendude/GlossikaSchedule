@@ -8,10 +8,12 @@ import java.util.ArrayList;
 
 public class Schedule {
 	String mTitle;	// later switch to Schedule type?
+	String mLanguage;
 	ArrayList<Day> mSchedule;
 
-	public Schedule(String title) {
+	public Schedule(String title, String language) {
 		mTitle = title;
+		mLanguage = language;
 		mSchedule = new ArrayList<>();
 	}
 
@@ -33,5 +35,9 @@ public class Schedule {
 
 	public void addDay(Day day) {
 		mSchedule.add(day);
+	}
+
+	public String getLanguage() {
+		return mLanguage;
 	}
 }
