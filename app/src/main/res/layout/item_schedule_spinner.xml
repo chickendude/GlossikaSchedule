@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:background="@drawable/schedule_item_background"
+			  android:orientation="horizontal"
+			  android:padding="5dp">
+
+	<RelativeLayout
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="3"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/titleLabel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAlignment="center"
+			android:textSize="18sp"
+			android:textStyle="normal|bold"
+			tools:text="9-month relaxed"/>
+
+		<ImageView
+			android:id="@+id/imageView"
+			android:layout_width="wrap_content"
+			android:layout_height="80dp"
+			android:layout_below="@id/titleLabel"
+			android:scaleType="fitCenter"
+			app:srcCompat="@drawable/clock"/>
+
+	</RelativeLayout>
+
+	<TextView
+		android:id="@+id/summaryLabel"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_weight="3"
+		tools:text="A short summary of it all"/>
+
+</LinearLayout>

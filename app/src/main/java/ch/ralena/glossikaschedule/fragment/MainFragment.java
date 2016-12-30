@@ -12,12 +12,11 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
 import ch.ralena.glossikaschedule.object.Day;
-import ch.ralena.glossikaschedule.object.Language;
 import ch.ralena.glossikaschedule.object.Schedule;
-import ch.ralena.glossikaschedule.object.ScheduleData;
 import ch.ralena.glossikaschedule.object.StudyItem;
 import ch.ralena.glossikaschedule.sql.SqlManager;
 
@@ -98,8 +97,14 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	private void createSchedule() {
 		ArrayList<Schedule> schedules = mSqlManager.getSchedule();
 		if (schedules.size() == 0) {
-			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE, Language.CANTONESE);
-			mSqlManager.createSchedule(mSchedule);
+			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
+			getFragmentManager()
+					.beginTransaction()
+					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, MainActivity.MAIN_FRAGMENT_TAG)
+					.commit();
+
+//			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE, Language.CANTONESE);
+//			mSqlManager.createSchedule(mSchedule);
 		} else {
 			mSchedule = schedules.get(0);
 		}
