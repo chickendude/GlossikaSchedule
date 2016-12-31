@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import ch.ralena.glossikaschedule.R;
+import ch.ralena.glossikaschedule.adapter.LanguageSpinnerAdapter;
 import ch.ralena.glossikaschedule.adapter.ScheduleSpinnerAdapter;
+import ch.ralena.glossikaschedule.data.LanguageData;
 import ch.ralena.glossikaschedule.data.ScheduleData;
 
 /**
@@ -24,6 +26,10 @@ public class NewScheduleFragment extends Fragment {
 		Spinner scheduleSpinner = (Spinner) view.findViewById(R.id.scheduleSpinner);
 		ScheduleSpinnerAdapter scheduleSpinnerAdapter = new ScheduleSpinnerAdapter(getActivity(), R.layout.item_schedule_spinner, ScheduleData.getScheduleTypes());
 		scheduleSpinner.setAdapter(scheduleSpinnerAdapter);
+
+		Spinner languageSpinner = (Spinner) view.findViewById(R.id.languageSpinner);
+		LanguageSpinnerAdapter languageSpinnerAdapter = new LanguageSpinnerAdapter(getActivity(), R.layout.item_language_spinner, LanguageData.getLanguages());
+		languageSpinner.setAdapter(languageSpinnerAdapter);
 		return view;
 	}
 }
