@@ -47,6 +47,7 @@ public class SqlManager {
 				String language = getString(cursor, SqlHelper.COL_SCHEDULE_LANGUAGE);
 				Schedule schedule = new Schedule(title, language);
 				schedule.setSchedule(getDays(database, id));
+				schedule.setId(id);
 				schedules.add(schedule);
 			} while (cursor.moveToNext());
 		}

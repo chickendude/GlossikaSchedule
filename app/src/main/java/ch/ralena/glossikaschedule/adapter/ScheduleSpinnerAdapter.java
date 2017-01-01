@@ -45,6 +45,8 @@ public class ScheduleSpinnerAdapter extends ArrayAdapter<ScheduleType> {
 		title.setText(scheduleType.getTitle());
 		TextView summary = (TextView) view.findViewById(R.id.summaryLabel);
 		summary.setText(scheduleType.getSummary());
+		TextView minutesDay = (TextView) view.findViewById(R.id.minutesDayLabel);
+		minutesDay.setText(scheduleType.getMinutesDay() + " min\nday");
 		return view;
 	}
 

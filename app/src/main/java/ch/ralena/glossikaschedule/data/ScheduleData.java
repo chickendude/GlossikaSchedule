@@ -11,6 +11,8 @@ import ch.ralena.glossikaschedule.object.StudyItem;
  */
 
 public class ScheduleData {
+	public static ArrayList<ScheduleType> scheduleList;
+
 	public static final String SCHEDULE_5_INTENSIVE = "5-Month Intensive";
 	public static final String SCHEDULE_5_INTENSIVE_SUMMARY = "This is one of our favorites. If you're jumping into a new language, no matter the difficulty, and want to get results within a half year and can afford 90 minutes per day, this is the schedule for you.";
 	public static final String SCHEDULE_5_INTENSIVE_DESCRIPTION = "5-Month Intensive Training";
@@ -620,6 +622,10 @@ public class ScheduleData {
 			{"F3­GSR­DAY­094","F3­GSR­DAY­100"}
 	};
 
+	static {
+		scheduleList = getScheduleTypes();
+	}
+
 	public static ArrayList<ScheduleType> getScheduleTypes() {
 		ArrayList<ScheduleType> scheduleTypes = new ArrayList<>();
 		scheduleTypes.add(new ScheduleType(SCHEDULE_9_RELAXED, SCHEDULE_9_RELAXED_STRINGS, 20, SCHEDULE_9_RELAXED_SUMMARY, SCHEDULE_9_RELAXED_DESCRIPTION));
@@ -628,23 +634,11 @@ public class ScheduleData {
 		return scheduleTypes;
 	}
 
-	public static Schedule createSchedule(String scheduleType, String language) {
-		String[][] scheduleString;
-		String scheduleTitle;
-		switch (scheduleType) {
-			case SCHEDULE_5_INTENSIVE:
-				scheduleString = SCHEDULE_5_INTENSIVE_STRINGS;
-				scheduleTitle = "5 month intensive";
-				break;
-			default:
-				scheduleString = SCHEDULE_5_INTENSIVE_STRINGS;
-				scheduleTitle = "5 month intensive";
-				break;
-		}
-
-		Schedule schedule = new Schedule(scheduleTitle, language);
+	public static Schedule createSchedule(int scheduleType, String language) {
+		String[][] scheduleStrings = scheduleList.get(scheduleType).getSchedule();
+		Schedule schedule = new Schedule(scheduleList.get(scheduleType).getTitle(), language);
 		int day = 1;
-		for (String[] dayItems : ScheduleData.SCHEDULE_5_INTENSIVE_STRINGS) {
+		for (String[] dayItems : scheduleStrings) {
 			ArrayList<StudyItem> studyItems = new ArrayList<>();
 			for (String dayItem : dayItems) {
 				studyItems.add(new StudyItem(dayItem));

@@ -31,7 +31,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 
 	SqlManager mSqlManager;
 	private Schedule mSchedule;
-	private int mCurrentDay = -1;
+	private int mCurrentDayId = -1;
+	private Day mCurrentDay;
 	private ScheduleAdapter mAdapter;
 	private boolean mIsDialogOpen;
 
@@ -40,6 +41,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mSqlManager = new SqlManager(getContext());
 
+		Bundle bundle = getArguments();
+
 		if (savedInstanceState != null) {
 			mIsDialogOpen = savedInstanceState.getBoolean(TAG_DIALOG_OPEN);
 		} else {
@@ -47,7 +50,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		}
 
 		createSchedule();
-		findCurrentDay();
+		findNextIncompleteDay();
 
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
 		// set up recycler view
@@ -70,7 +73,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState == null) {
 			if (!mIsDialogOpen) {
-				showDay(getCurrentDay());
+				showDay(mCurrentDay);
 			}
 		}
 	}
@@ -85,10 +88,11 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		dayFragment.show(getFragmentManager(), null);
 	}
 
-	private void findCurrentDay() {
+	private void findNextIncompleteDay() {
 		for (Day day : mSchedule.getSchedule()) {
-			mCurrentDay = day.getDayNumber() - 1;
+			mCurrentDayId = day.getDayNumber() - 1;
 			if (!day.isCompleted()) {
+				getCurrentDay();
 				return;
 			}
 		}
@@ -96,41 +100,41 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 
 	private void createSchedule() {
 		ArrayList<Schedule> schedules = mSqlManager.getSchedule();
+		// TODO: check if we really need to test to load the schedule creator fragment
 		if (schedules.size() == 0) {
 			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
 			getFragmentManager()
 					.beginTransaction()
 					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, MainActivity.MAIN_FRAGMENT_TAG)
 					.commit();
-
-//			mSchedule = ScheduleData.createSchedule(ScheduleData.SCHEDULE_5_INTENSIVE, Language.CANTONESE);
-//			mSqlManager.createSchedule(mSchedule);
 		} else {
 			mSchedule = schedules.get(0);
 		}
 	}
 
-	private Day getCurrentDay() {
-		int index = mCurrentDay;
+	public Day getCurrentDay() {
+		int index = mCurrentDayId;
 		if (index < 0) {
 			index = 0;
 		}
-		return mSchedule.getSchedule().get(index);
+		mCurrentDay = mSchedule.getSchedule().get(index);
+		return mCurrentDay;
 	}
 
 	@Override
-	public void onItemClicked(Day day) {
+	public void onItemClicked(Day day, int position) {
+		mCurrentDay = day;
 		showDay(day);
 	}
 
-	public void saveDay(Day day) {
+	public void saveDay() {
 		mIsDialogOpen = false;
 		boolean isCompleted = true;
-		for (StudyItem studyItem : day.getStudyItems()) {
+		for (StudyItem studyItem : mCurrentDay.getStudyItems()) {
 			isCompleted = isCompleted & studyItem.isCompleted();
 		}
-		day.setCompleted(isCompleted);
+		mCurrentDay.setCompleted(isCompleted);
 		mAdapter.notifyDataSetChanged();
-		mSqlManager.updateDay(day);
+		mSqlManager.updateDay(mCurrentDay);
 	}
 }

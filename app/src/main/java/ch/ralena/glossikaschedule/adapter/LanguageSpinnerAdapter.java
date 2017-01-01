@@ -39,6 +39,8 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<LanguageType> {
 		return createView(position, convertView, parent);
 	}
 
+
+
 	private View createView(int position, View convertView, ViewGroup parent) {
 		LanguageType languageType = mLanguages.get(position);
 		View view = mInflater.inflate(R.layout.item_language_spinner, parent, false);

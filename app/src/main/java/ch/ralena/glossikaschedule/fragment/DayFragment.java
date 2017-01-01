@@ -48,7 +48,7 @@ public class DayFragment extends DialogFragment {
 		mDayLabel.setText("Day " + mDay.getDayNumber());
 		// set up recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-		DayAdapter adapter = new DayAdapter(mDay.getStudyItems());
+		DayAdapter adapter = new DayAdapter(mDay.getStudyItems(), (DayAdapter.OnItemCheckedListener)getActivity());
 		recyclerView.setAdapter(adapter);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		recyclerView.setLayoutManager(layoutManager);

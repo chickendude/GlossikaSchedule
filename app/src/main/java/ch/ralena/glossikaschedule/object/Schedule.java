@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Schedule {
+	long mId;
 	String mTitle;	// later switch to Schedule type?
 	String mLanguage;
 	ArrayList<Day> mSchedule;
@@ -39,5 +40,13 @@ public class Schedule {
 
 	public String getLanguage() {
 		return mLanguage;
+	}
+
+	public long getId() {
+		return mId;
+	}
+
+	public void setId(long id) {
+		mId = id;
 	}
 }

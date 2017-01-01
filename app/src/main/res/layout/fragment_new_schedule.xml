@@ -21,14 +21,13 @@
 		android:layout_centerVertical="true"/>
 
 	<Button
-		android:id="@+id/button"
+		android:id="@+id/createScheduleButton"
+		style="@style/Widget.AppCompat.Button.Colored"
 		android:layout_width="match_parent"
 		android:textSize="20sp"
 		android:layout_height="wrap_content"
 		android:textAllCaps="false"
 		android:layout_alignParentBottom="true"
 		android:layout_centerHorizontal="true"
-		android:text="Create Schedule"
-		android:textColor="#FFFFFF"
-		android:background="@drawable/button_background"/>
+		android:text="Create Schedule"/>
 </RelativeLayout>

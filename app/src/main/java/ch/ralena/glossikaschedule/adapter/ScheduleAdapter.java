@@ -20,7 +20,7 @@ import ch.ralena.glossikaschedule.object.Day;
 
 public class ScheduleAdapter extends RecyclerView.Adapter {
 	public interface OnItemClickedListener {
-		void onItemClicked(Day day);
+		void onItemClicked(Day day, int position);
 	}
 	ArrayList<Day> mDays;
 	OnItemClickedListener mListener;
@@ -40,7 +40,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		((ViewHolder) holder).bindView(mDays.get(position));
+		((ViewHolder) holder).bindView(mDays.get(position), position);
 	}
 
 	@Override
@@ -52,6 +52,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		LinearLayout mLayout;
 		TextView mDayLabel;
 		Day mDay;
+		int mPosition;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -60,7 +61,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 			mDayLabel.setOnClickListener(mOnClickListener);
 		}
 
-		public void bindView(Day day) {
+		public void bindView(Day day, int position) {
+			mPosition = position;
 			mDayLabel.setText(day.getDayNumber()+"");
 			mDay = day;
 			if (day.isCompleted()) {
@@ -73,7 +75,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		View.OnClickListener mOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mListener.onItemClicked(mDay);
+				mListener.onItemClicked(mDay, mPosition);
 			}
 		};
 	}

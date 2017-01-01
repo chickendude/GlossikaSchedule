@@ -50,4 +50,8 @@ public class ScheduleType {
 	public void setDescription(String description) {
 		mDescription = description;
 	}
+
+	public int getMinutesDay() {
+		return mMinutesDay;
+	}
 }

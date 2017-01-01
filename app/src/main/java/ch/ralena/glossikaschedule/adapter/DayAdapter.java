@@ -17,10 +17,16 @@ import ch.ralena.glossikaschedule.object.StudyItem;
  */
 
 public class DayAdapter extends RecyclerView.Adapter {
-	ArrayList<StudyItem> mStudyItems;
+	public interface OnItemCheckedListener {
+		void onItemChecked(ArrayList<StudyItem> studyItems);
+	}
 
-	public DayAdapter(ArrayList<StudyItem> studyItems) {
+	ArrayList<StudyItem> mStudyItems;
+	OnItemCheckedListener mListener;
+
+	public DayAdapter(ArrayList<StudyItem> studyItems, OnItemCheckedListener listener) {
 		mStudyItems = studyItems;
+		mListener = listener;
 	}
 
 	@Override
@@ -61,6 +67,7 @@ public class DayAdapter extends RecyclerView.Adapter {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 				mStudyItem.setCompleted(isChecked);
+				mListener.onItemChecked(mStudyItems);
 			}
 		};
 	}
