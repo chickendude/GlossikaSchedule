@@ -11,8 +11,8 @@ import ch.ralena.glossikaschedule.object.StudyItem;
  */
 
 public class ScheduleData {
-	public static final String SCHEDULE_5_INTENSIVE = "5-Month Intensive Training";
-	public static final String SCHEDULE_5_INTENSIVE_SUMMARY = "5-Month Intensive Training";
+	public static final String SCHEDULE_5_INTENSIVE = "5-Month Intensive";
+	public static final String SCHEDULE_5_INTENSIVE_SUMMARY = "This is one of our favorites. If you're jumping into a new language, no matter the difficulty, and want to get results within a half year and can afford 90 minutes per day, this is the schedule for you.";
 	public static final String SCHEDULE_5_INTENSIVE_DESCRIPTION = "5-Month Intensive Training";
 	public static final String[][] SCHEDULE_5_INTENSIVE_STRINGS = {{"F1-GMS-A-0001", "F1-GMS-A-0051", "F1-GMS-A-0101", "F1-GSR-DAY-002", "F1-GSR-DAY-005", "F1-GSR-DAY-006"},
 					{"F1-GMS-A-0151", "F1-GMS-A-0201", "F1-GMS-A-0251", "F1-GSR-DAY-004", "F1-GSR-DAY-007", "F1-GSR-DAY-008"},
@@ -161,8 +161,8 @@ public class ScheduleData {
 					{"F3-GMS-B-2701", "F3-GMS-B-2751", "F3-GSR-DAY-094", "F3-GSR-DAY-097", "F3-GSR-DAY-098"},
 					{"F3-GMS-B-2801", "F3-GMS-B-2851", "F3-GSR-DAY-096", "F3-GSR-DAY-099", "F3-GSR-DAY-100"},
 					{"F3-GMS-B-2901", "F3-GMS-B-2951", "F3-GSR-DAY-098", "F3-GSR-DAY-101", "F3-GSR-DAY-102"}};
-	public static final String SCHEDULE_9_RELAXED = "9-Month Relaxed Training";
-	public static final String SCHEDULE_9_RELAXED_SUMMARY = "20 Minutes Daily, 180 Reps Daily, 1260 Reps Weekly, 57180 Reps Total";
+	public static final String SCHEDULE_9_RELAXED = "9-Month Relaxed";
+	public static final String SCHEDULE_9_RELAXED_SUMMARY = "Use this for your first foreign language or any other very distant and different language.";
 	public static final String SCHEDULE_9_RELAXED_DESCRIPTION = "This schedule is for the really busy person. So there is less practice per day, and more emphasis on Spaced Repetition. Best results will be achieved by doing at least one file per day.";
 	public static final String[][] SCHEDULE_9_RELAXED_STRINGS = {
 			{"F1­GMS­A­0001", "F1­GSR­DAY­01"},
@@ -467,8 +467,8 @@ public class ScheduleData {
 			{"F3­GSR­DAY­100"},
 			{"F3­GSR­DAY­101"}
 	};
-	public static final String SCHEDULE_5_RELAXED = "5-Month Relaxed Training";
-	public static final String SCHEDULE_5_RELAXED_SUMMARY = "60 Minutes Daily, 64000 Reps";
+	public static final String SCHEDULE_5_RELAXED = "5-Month Relaxed";
+	public static final String SCHEDULE_5_RELAXED_SUMMARY = "Recommended as a refresher course on a language you may have studied before. You're still very serious about it and want to see results within a half year.";
 	public static final String SCHEDULE_5_RELAXED_DESCRIPTION = "This schedule is for the busy person that wants to get results within a half year or for experienced learners trying a completely different language for the first time.";
 	public static final String[][] SCHEDULE_5_RELAXED_STRINGS = {
 			{"F1­GMS­A­0001","F1­GMS­A­0051","F1­GSR­DAY­002","F1­GSR­DAY­007"},
@@ -622,9 +622,9 @@ public class ScheduleData {
 
 	public static ArrayList<ScheduleType> getScheduleTypes() {
 		ArrayList<ScheduleType> scheduleTypes = new ArrayList<>();
-		scheduleTypes.add(new ScheduleType(SCHEDULE_9_RELAXED, SCHEDULE_9_RELAXED_STRINGS, SCHEDULE_9_RELAXED_SUMMARY, SCHEDULE_9_RELAXED_DESCRIPTION));
-		scheduleTypes.add(new ScheduleType(SCHEDULE_5_RELAXED, SCHEDULE_5_RELAXED_STRINGS, SCHEDULE_5_RELAXED_SUMMARY, SCHEDULE_5_RELAXED_DESCRIPTION));
-		scheduleTypes.add(new ScheduleType(SCHEDULE_5_INTENSIVE, SCHEDULE_5_INTENSIVE_STRINGS, SCHEDULE_5_INTENSIVE_SUMMARY, SCHEDULE_5_INTENSIVE_DESCRIPTION));
+		scheduleTypes.add(new ScheduleType(SCHEDULE_9_RELAXED, SCHEDULE_9_RELAXED_STRINGS, 20, SCHEDULE_9_RELAXED_SUMMARY, SCHEDULE_9_RELAXED_DESCRIPTION));
+		scheduleTypes.add(new ScheduleType(SCHEDULE_5_RELAXED, SCHEDULE_5_RELAXED_STRINGS, 60, SCHEDULE_5_RELAXED_SUMMARY, SCHEDULE_5_RELAXED_DESCRIPTION));
+		scheduleTypes.add(new ScheduleType(SCHEDULE_5_INTENSIVE, SCHEDULE_5_INTENSIVE_STRINGS, 90, SCHEDULE_5_INTENSIVE_SUMMARY, SCHEDULE_5_INTENSIVE_DESCRIPTION));
 		return scheduleTypes;
 	}
 

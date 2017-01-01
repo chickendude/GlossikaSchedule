@@ -10,7 +10,7 @@
 	<RelativeLayout
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_weight="3"
+		android:layout_weight="2"
 		android:orientation="vertical">
 
 		<TextView
@@ -18,17 +18,32 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAlignment="center"
-			android:textSize="18sp"
+			android:textSize="17sp"
 			android:textStyle="normal|bold"
 			tools:text="9-month relaxed"/>
 
 		<ImageView
-			android:id="@+id/imageView"
-			android:layout_width="wrap_content"
+			android:id="@+id/clockImage"
+			android:layout_width="80dp"
 			android:layout_height="80dp"
 			android:layout_below="@id/titleLabel"
+			android:layout_centerHorizontal="true"
 			android:scaleType="fitCenter"
 			app:srcCompat="@drawable/clock"/>
+
+		<TextView
+			android:id="@+id/minutesDayLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@id/clockImage"
+			android:layout_alignLeft="@id/clockImage"
+			android:layout_alignRight="@id/clockImage"
+			android:layout_alignTop="@id/clockImage"
+			android:gravity="center"
+			android:textColor="@color/colorPrimaryDark"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			tools:text="20 min\nday"/>
 
 	</RelativeLayout>
 
@@ -37,7 +52,7 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:layout_weight="3"
+		android:layout_weight="4"
 		tools:text="A short summary of it all"/>
 
 </LinearLayout>

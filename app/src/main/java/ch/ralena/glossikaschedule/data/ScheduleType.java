@@ -7,12 +7,14 @@ package ch.ralena.glossikaschedule.data;
 public class ScheduleType {
 	private String mTitle;
 	private String[][] mSchedule;
+	private int mMinutesDay;
 	private String mSummary;
 	private String mDescription;
 
-	public ScheduleType(String title, String[][] schedule, String summary, String description) {
+	public ScheduleType(String title, String[][] schedule, int minutesDay, String summary, String description) {
 		mTitle = title;
 		mSchedule = schedule;
+		mMinutesDay = minutesDay;
 		mSummary = summary;
 		mDescription = description;
 	}
