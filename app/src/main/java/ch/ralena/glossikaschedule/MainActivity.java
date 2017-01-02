@@ -3,11 +3,15 @@ package ch.ralena.glossikaschedule;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	private SqlManager mSqlManager;
 	private FragmentManager mFragmentManager;
 	NavigationAdapter mNavigationAdapter;
+	ActionBarDrawerToggle mDrawerToggle;
 
 	ArrayList<Schedule> mSchedules;
 
@@ -67,6 +72,19 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	private void setupNavigationDrawer() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				invalidateOptionsMenu();
+			}
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				invalidateOptionsMenu();
+			}
+		};
+		mDrawerToggle.syncState();
+		mDrawerToggle.setDrawerIndicatorEnabled(true);
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.navigationRecyclerView);
 		mNavigationAdapter = new NavigationAdapter(this, mSchedules, 0);
 		recyclerView.setAdapter(mNavigationAdapter);
@@ -75,13 +93,6 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void loadMainFragment(Schedule schedule) {
-//		if (mNavigationAdapter != null) {
-//			int position = mSchedules.indexOf(schedule);
-//			int prevPosition = mNavigationAdapter.getCurrentPosition();
-//			mNavigationAdapter.setCurrentPosition(position);
-//			mNavigationAdapter.notifyItemChanged(position);
-//			mNavigationAdapter.notifyItemChanged(prevPosition);
-//		}
 		mDrawerLayout.closeDrawers();
 		mMainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
@@ -125,6 +136,16 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	@Override
 	public void onNewSchedule() {
 		loadNewScheduleFragment();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				mDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
