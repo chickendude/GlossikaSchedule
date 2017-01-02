@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
 	private static final String NEW_SCHEDULE_FRAGMENT_TAG = "new_schedule_fragment";
 	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final String TAG_SCHEDULE_ID = "schedule_id";
+	public static final String TAG_SCHEDULE_ID = "schedule_id";
 
 	DrawerLayout mDrawerLayout;
 	MainFragment mMainFragment;
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
 		// set up toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		if (mSchedules.size() == 0) {
 			loadNewScheduleFragment();
 		} else {
-			loadMainFragment(mSchedules.get(0).getId());
+			loadMainFragment(mSchedules.get(0));
 		}
 
 		// set up nav drawer
@@ -72,21 +74,27 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		recyclerView.setLayoutManager(layoutManager);
 	}
 
-	private void loadMainFragment(long scheduleId) {
-		mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
-		if (mMainFragment == null) {
-			mMainFragment = new MainFragment();
-			Bundle bundle = new Bundle();
-			bundle.putLong(TAG_SCHEDULE_ID, scheduleId);
-			mMainFragment.setArguments(bundle);
-			mFragmentManager
-					.beginTransaction()
-					.replace(R.id.fragmentPlaceHolder, mMainFragment, MAIN_FRAGMENT_TAG)
-					.commit();
-		}
+	private void loadMainFragment(Schedule schedule) {
+//		if (mNavigationAdapter != null) {
+//			int position = mSchedules.indexOf(schedule);
+//			int prevPosition = mNavigationAdapter.getCurrentPosition();
+//			mNavigationAdapter.setCurrentPosition(position);
+//			mNavigationAdapter.notifyItemChanged(position);
+//			mNavigationAdapter.notifyItemChanged(prevPosition);
+//		}
+		mDrawerLayout.closeDrawers();
+		mMainFragment = new MainFragment();
+		Bundle bundle = new Bundle();
+		bundle.putLong(TAG_SCHEDULE_ID, schedule.getId());
+		mMainFragment.setArguments(bundle);
+		mFragmentManager
+				.beginTransaction()
+				.replace(R.id.fragmentPlaceHolder, mMainFragment, MAIN_FRAGMENT_TAG)
+				.commit();
 	}
 
 	private void loadNewScheduleFragment() {
+		mDrawerLayout.closeDrawers();
 		mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
 		mNewScheduleFragment = (NewScheduleFragment) mFragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
 		if (mNewScheduleFragment == null) {
@@ -105,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	public void onScheduleCreated(Schedule schedule) {
 		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		mSchedules.add(schedule);
-		mNavigationAdapter.notifyDataSetChanged();
-		loadMainFragment(schedule.getId());
+		mNavigationAdapter.notifyItemInserted(mSchedules.size());
+		loadMainFragment(schedule);
 	}
 
 	@Override
@@ -120,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	@Override
-	public void onScheduleClicked() {
+	public void onScheduleClicked(Schedule schedule) {
+		loadMainFragment(schedule);
 	}
 }

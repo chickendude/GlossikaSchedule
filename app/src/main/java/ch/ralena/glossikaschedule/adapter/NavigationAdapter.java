@@ -22,7 +22,7 @@ import ch.ralena.glossikaschedule.object.Schedule;
 public class NavigationAdapter extends RecyclerView.Adapter {
 	public interface OnItemClickListener {
 		void onNewSchedule();
-		void onScheduleClicked();
+		void onScheduleClicked(Schedule schedule);
 	}
 
 	private static final int TYPE_LANGUAGE = 1;
@@ -37,6 +37,14 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 		mListener = (OnItemClickListener) context;
 		mSchedules = schedules;
 		mCurrentPosition = currentPosition;
+	}
+
+	public void setCurrentPosition(int currentPosition) {
+		mCurrentPosition = currentPosition;
+	}
+
+	public int getCurrentPosition() {
+		return mCurrentPosition;
 	}
 
 	@Override
@@ -76,6 +84,7 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 		private TextView mLanguageName;
 		private TextView mScheduleType;
 		private ImageView mFlagImage;
+		private Schedule mSchedule;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -83,9 +92,22 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 			mLanguageName = (TextView) view.findViewById(R.id.languageLabel);
 			mScheduleType = (TextView) view.findViewById(R.id.scheduleTypeLabel);
 			mFlagImage = (ImageView) view.findViewById(R.id.flagImageView);
+			mView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					ViewGroup parent = (ViewGroup) view.getParent();
+					int numViews = parent.getChildCount();
+					for (int i = 0; i < numViews; i++) {
+						parent.getChildAt(i).setBackgroundColor(Color.WHITE);
+					}
+					mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
+					mListener.onScheduleClicked(mSchedule);
+				}
+			});
 		}
 
 		public void bindView(Schedule schedule, int position) {
+			mSchedule = schedule;
 			if (mCurrentPosition == position) {
 				mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
 			} else {

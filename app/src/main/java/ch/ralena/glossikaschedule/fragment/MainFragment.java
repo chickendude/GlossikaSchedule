@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
@@ -28,6 +26,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String CURRENT_DAY = "current_day";
 	private static final String TAG_DIALOG_OPEN = "dialog_open";
+	private static final String DAY_FRAGMENT_TAG = "day_fragment";
 
 	SqlManager mSqlManager;
 	private Schedule mSchedule;
@@ -41,15 +40,16 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mSqlManager = new SqlManager(getContext());
 
-		Bundle bundle = getArguments();
-
 		if (savedInstanceState != null) {
 			mIsDialogOpen = savedInstanceState.getBoolean(TAG_DIALOG_OPEN);
 		} else {
 			mIsDialogOpen = false;
 		}
 
-		createSchedule();
+		Bundle bundle = getArguments();
+		long id = bundle.getLong(MainActivity.TAG_SCHEDULE_ID);
+		mSchedule = mSqlManager.getSchedule(id);
+
 		findNextIncompleteDay();
 
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -79,13 +79,16 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	public void showDay(Day day) {
-		mIsDialogOpen = true;
-		DayFragment dayFragment = new DayFragment();
-		dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(CURRENT_DAY, day);
-		dayFragment.setArguments(bundle);
-		dayFragment.show(getFragmentManager(), null);
+		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
+		if (dayFragment == null) {
+			mIsDialogOpen = true;
+			dayFragment = new DayFragment();
+			dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
+			Bundle bundle = new Bundle();
+			bundle.putParcelable(CURRENT_DAY, day);
+			dayFragment.setArguments(bundle);
+			dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
+		}
 	}
 
 	private void findNextIncompleteDay() {
@@ -95,20 +98,6 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 				getCurrentDay();
 				return;
 			}
-		}
-	}
-
-	private void createSchedule() {
-		ArrayList<Schedule> schedules = mSqlManager.getSchedules();
-		// TODO: check if we really need to test to load the schedule creator fragment
-		if (schedules.size() == 0) {
-			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
-			getFragmentManager()
-					.beginTransaction()
-					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, MainActivity.MAIN_FRAGMENT_TAG)
-					.commit();
-		} else {
-			mSchedule = schedules.get(0);
 		}
 	}
 
