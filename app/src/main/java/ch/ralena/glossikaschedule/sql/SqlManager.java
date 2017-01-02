@@ -57,6 +57,37 @@ public class SqlManager {
 		return schedules;
 	}
 
+	public Schedule getSchedule(long id) {
+		SQLiteDatabase database = mSqlHelper.getWritableDatabase();
+
+		Schedule schedule = null;
+
+		String table = SqlHelper.TABLE_SCHEDULE;
+		String col_language = SqlHelper.COL_SCHEDULE_LANGUAGE;
+		String col_title = SqlHelper.COL_SCHEDULE_TITLE;
+		String selection = BaseColumns._ID + "=" + id;
+
+		Cursor cursor = database.query(
+				table,
+				new String[]{col_language, col_title, BaseColumns._ID},
+				selection,
+				null,
+				null,
+				null,
+				null);
+		if (cursor.moveToFirst()) {
+			String title = getString(cursor, SqlHelper.COL_SCHEDULE_TITLE);
+			String language = getString(cursor, SqlHelper.COL_SCHEDULE_LANGUAGE);
+			schedule = new Schedule(title, language);
+			schedule.setSchedule(getDays(database, id));
+			schedule.setId(id);
+		}
+
+		cursor.close();
+		database.close();
+		return schedule;
+	}
+
 	private ArrayList<Day> getDays(SQLiteDatabase database, long scheduleId) {
 		ArrayList<Day> days = new ArrayList<>();
 		Cursor dayCursor = database.rawQuery(

@@ -27,7 +27,7 @@ import ch.ralena.glossikaschedule.sql.SqlManager;
 public class NewScheduleFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 	public interface OnScheduleCreatedListener {
-		void onScheduleCreated(long scheduleId);
+		void onScheduleCreated(Schedule schedule);
 	}
 
 	private Spinner mScheduleSpinner;
@@ -76,7 +76,8 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 				Schedule schedule;
 				schedule = ScheduleData.createSchedule(mScheduleType, mLanguageType.getName());
 				long id = sqlManager.createSchedule(schedule);
-				mListener.onScheduleCreated(id);
+				schedule.setId(id);
+				mListener.onScheduleCreated(schedule);
 			}
 		});
 		return view;

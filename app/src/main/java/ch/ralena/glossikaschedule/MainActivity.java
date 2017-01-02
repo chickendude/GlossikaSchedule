@@ -2,6 +2,7 @@ package ch.ralena.glossikaschedule;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -86,21 +87,26 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void loadNewScheduleFragment() {
+		mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
 		mNewScheduleFragment = (NewScheduleFragment) mFragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
 		if (mNewScheduleFragment == null) {
 			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
-			getSupportFragmentManager()
+			FragmentTransaction fragmentTransaction = getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG)
-					.commit();
+					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
+			if (mMainFragment != null) {
+				fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
+			}
+			fragmentTransaction.commit();
 		}
 	}
 
 	@Override
-	public void onScheduleCreated(long id) {
-		mSchedules = mSqlManager.getSchedules();
+	public void onScheduleCreated(Schedule schedule) {
+		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		mSchedules.add(schedule);
 		mNavigationAdapter.notifyDataSetChanged();
-		loadMainFragment(id);
+		loadMainFragment(schedule.getId());
 	}
 
 	@Override
