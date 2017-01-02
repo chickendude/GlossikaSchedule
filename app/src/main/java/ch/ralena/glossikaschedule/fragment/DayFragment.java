@@ -1,7 +1,5 @@
 package ch.ralena.glossikaschedule.fragment;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -21,19 +19,8 @@ import ch.ralena.glossikaschedule.object.Day;
  */
 
 public class DayFragment extends DialogFragment {
-	public interface OnDialogDismissedListener {
-		void dialogDismissed(Day day);
-	}
-
 	private TextView mDayLabel;
-	private OnDialogDismissedListener mListener;
 	private Day mDay;
-
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		mListener = (OnDialogDismissedListener) context;
-	}
 
 	@Nullable
 	@Override
@@ -53,11 +40,5 @@ public class DayFragment extends DialogFragment {
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		recyclerView.setLayoutManager(layoutManager);
 		return view;
-	}
-
-	@Override
-	public void onDismiss(DialogInterface dialog) {
-		super.onDismiss(dialog);
-		mListener.dialogDismissed(mDay);
 	}
 }

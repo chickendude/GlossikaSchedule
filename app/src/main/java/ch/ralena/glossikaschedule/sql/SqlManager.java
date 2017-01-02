@@ -23,7 +23,7 @@ public class SqlManager {
 		mSqlHelper = new SqlHelper(context);
 	}
 
-	public ArrayList<Schedule> getSchedule() {
+	public ArrayList<Schedule> getSchedules() {
 		SQLiteDatabase database = mSqlHelper.getWritableDatabase();
 
 		ArrayList<Schedule> schedules = new ArrayList<>();

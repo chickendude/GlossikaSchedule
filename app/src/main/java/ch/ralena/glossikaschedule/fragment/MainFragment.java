@@ -99,7 +99,7 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	private void createSchedule() {
-		ArrayList<Schedule> schedules = mSqlManager.getSchedule();
+		ArrayList<Schedule> schedules = mSqlManager.getSchedules();
 		// TODO: check if we really need to test to load the schedule creator fragment
 		if (schedules.size() == 0) {
 			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
@@ -130,11 +130,18 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	public void saveDay() {
 		mIsDialogOpen = false;
 		boolean isCompleted = true;
+		int numberCompleted = 0;
+		int total = mCurrentDay.getStudyItems().size();
 		for (StudyItem studyItem : mCurrentDay.getStudyItems()) {
+			if (studyItem.isCompleted()) {
+				numberCompleted++;
+			}
 			isCompleted = isCompleted & studyItem.isCompleted();
 		}
 		mCurrentDay.setCompleted(isCompleted);
-		mAdapter.notifyDataSetChanged();
+		if (numberCompleted == total || numberCompleted == total - 1) {
+			mAdapter.notifyDataSetChanged();
+		}
 		mSqlManager.updateDay(mCurrentDay);
 	}
 }

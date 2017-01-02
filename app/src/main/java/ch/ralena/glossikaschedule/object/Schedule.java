@@ -2,6 +2,9 @@ package ch.ralena.glossikaschedule.object;
 
 import java.util.ArrayList;
 
+import ch.ralena.glossikaschedule.data.LanguageData;
+import ch.ralena.glossikaschedule.data.LanguageType;
+
 /**
  * Created by crater-windoze on 12/27/2016.
  */
@@ -40,6 +43,16 @@ public class Schedule {
 
 	public String getLanguage() {
 		return mLanguage;
+	}
+
+	public LanguageType getLanguageType() {
+		LanguageType languageType = null;
+		for (LanguageType language : LanguageData.Languages) {
+			if (mLanguage.equals(language.getName())) {
+				return language;
+			}
+		}
+		return languageType;
 	}
 
 	public long getId() {
