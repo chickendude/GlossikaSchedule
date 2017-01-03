@@ -1,44 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/drawerLayout"
-	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context="ch.ralena.glossikaschedule.MainActivity">
+	android:layout_width="match_parent">
 
-	<LinearLayout
+	<android.support.v4.widget.DrawerLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/drawerLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:orientation="vertical">
+		tools:context="ch.ralena.glossikaschedule.MainActivity">
 
-		<android.support.v7.widget.Toolbar
-			xmlns:app="http://schemas.android.com/apk/res-auto"
-			android:id="@+id/toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="?attr/colorPrimaryDark"
-			android:fitsSystemWindows="true"
-			android:minHeight="?attr/actionBarSize"
-			app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-		<FrameLayout
-			android:id="@+id/fragmentPlaceHolder"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
-	</LinearLayout>
-	<!-- Side navigation drawer UI -->
-	<android.support.design.widget.NavigationView
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:layout_gravity="start">
-
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/navigationRecyclerView"
+		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:background="#FFFFFF"/>
+			android:orientation="vertical">
 
-	</android.support.design.widget.NavigationView>
-</android.support.v4.widget.DrawerLayout>
+			<android.support.v7.widget.Toolbar
+				xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:id="@+id/toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="?attr/colorPrimaryDark"
+				android:elevation="4dp"
+				android:fitsSystemWindows="true"
+				android:minHeight="?attr/actionBarSize"
+				android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+				app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+				app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+			<FrameLayout
+				android:id="@+id/fragmentPlaceHolder"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+		</LinearLayout>
+		<!-- Side navigation drawer UI -->
+		<android.support.design.widget.NavigationView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="start">
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/navigationRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="#FFFFFF"/>
+
+		</android.support.design.widget.NavigationView>
+	</android.support.v4.widget.DrawerLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 package ch.ralena.glossikaschedule;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	ActionBarDrawerToggle mDrawerToggle;
 
 	ArrayList<Schedule> mSchedules;
+	Schedule mLoadedSchedule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,18 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void loadMainFragment(Schedule schedule) {
+		if (mNavigationAdapter != null) {
+			int position = mSchedules.indexOf(schedule);
+			mNavigationAdapter.setCurrentPosition(position);
+			mNavigationAdapter.notifyDataSetChanged();
+		}
+		mLoadedSchedule = schedule;
 		mDrawerLayout.closeDrawers();
+		mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
+		mFragmentManager
+				.beginTransaction()
+				.remove(mMainFragment)
+				.commit();
 		mMainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
 		bundle.putLong(TAG_SCHEDULE_ID, schedule.getId());
@@ -126,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	public void onScheduleCreated(Schedule schedule) {
 		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		mSchedules.add(schedule);
-		mNavigationAdapter.notifyItemInserted(mSchedules.size());
 		loadMainFragment(schedule);
 	}
 
@@ -141,13 +154,39 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.toolbar, menu);
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				mDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
 				return true;
+			case R.id.action_delete:
+				deleteSchedule();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void deleteSchedule() {
+		final Snackbar snackbar = Snackbar.make(findViewById(R.id.fragmentPlaceHolder), "Delete " + mLoadedSchedule.getLanguage() + "?\n(Can't be undone!)", Snackbar.LENGTH_INDEFINITE);
+		snackbar.setAction("Delete", new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mSqlManager.deleteSchedule(mLoadedSchedule);
+				int position = mSchedules.indexOf(mLoadedSchedule);
+				mSchedules.remove(mLoadedSchedule);
+				mNavigationAdapter.notifyItemRemoved(position);
+				if (position > 0) position--;
+				loadMainFragment(mSchedules.get(position));
+				snackbar.dismiss();
+			}
+		});
+		snackbar.show();
 	}
 
 	@Override

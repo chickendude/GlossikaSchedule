@@ -186,4 +186,18 @@ public class SqlManager {
 		database.endTransaction();
 		database.close();
 	}
+
+	public void deleteSchedule(Schedule schedule) {
+		SQLiteDatabase database = mSqlHelper.getWritableDatabase();
+		database.beginTransaction();
+
+		String table = SqlHelper.TABLE_SCHEDULE;
+		String where = BaseColumns._ID + "=?";
+
+		database.delete(table,where,new String[]{schedule.getId()+""});
+
+		database.setTransactionSuccessful();
+		database.endTransaction();
+		database.close();
+	}
 }

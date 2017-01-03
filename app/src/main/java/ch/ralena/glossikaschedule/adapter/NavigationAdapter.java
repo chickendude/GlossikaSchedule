@@ -107,8 +107,11 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 
 		public void bindView(Schedule schedule, int position) {
 			mSchedule = schedule;
+			// highlight currently selected menu item
 			if (mCurrentPosition == position) {
 				mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
+			} else {
+				mView.setBackgroundResource(R.drawable.menu_language);
 			}
 			mLanguageName.setText(schedule.getLanguage());
 			mScheduleType.setText(schedule.getTitle());

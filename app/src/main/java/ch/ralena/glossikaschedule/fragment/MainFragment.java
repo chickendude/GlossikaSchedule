@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,18 +34,12 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	private int mCurrentDayId = -1;
 	private Day mCurrentDay;
 	private ScheduleAdapter mAdapter;
-	private boolean mIsDialogOpen;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		Log.d(TAG, "Create view");
 		mSqlManager = new SqlManager(getContext());
-
-		if (savedInstanceState != null) {
-			mIsDialogOpen = savedInstanceState.getBoolean(TAG_DIALOG_OPEN);
-		} else {
-			mIsDialogOpen = false;
-		}
 
 		Bundle bundle = getArguments();
 		long id = bundle.getLong(MainActivity.TAG_SCHEDULE_ID);
@@ -65,25 +60,22 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(TAG_DIALOG_OPEN, mIsDialogOpen);
-		super.onSaveInstanceState(outState);
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG, "Start");
 	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState == null) {
-			if (!mIsDialogOpen) {
-				showDay(mCurrentDay);
-			}
+			showDay(mCurrentDay);
 		}
 	}
 
 	public void showDay(Day day) {
 		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
 		if (dayFragment == null) {
-			mIsDialogOpen = true;
 			dayFragment = new DayFragment();
 			dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
 			Bundle bundle = new Bundle();
@@ -119,7 +111,6 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 	}
 
 	public void saveDay() {
-		mIsDialogOpen = false;
 		boolean isCompleted = true;
 		int numberCompleted = 0;
 		int total = mCurrentDay.getStudyItems().size();
@@ -131,7 +122,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		}
 		mCurrentDay.setCompleted(isCompleted);
 		if (numberCompleted == total || numberCompleted == total - 1) {
-			mAdapter.notifyDataSetChanged();
+			int position = mSchedule.getSchedule().indexOf(mCurrentDay);
+			mAdapter.notifyItemChanged(position);
 		}
 		mSqlManager.updateDay(mCurrentDay);
 	}
