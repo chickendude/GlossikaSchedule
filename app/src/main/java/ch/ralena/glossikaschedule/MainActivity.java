@@ -105,10 +105,12 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		mLoadedSchedule = schedule;
 		mDrawerLayout.closeDrawers();
 		mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
-		mFragmentManager
-				.beginTransaction()
-				.remove(mMainFragment)
-				.commit();
+		if (mMainFragment != null) {
+			mFragmentManager
+					.beginTransaction()
+					.remove(mMainFragment)
+					.commit();
+		}
 		mMainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
 		bundle.putLong(TAG_SCHEDULE_ID, schedule.getId());
