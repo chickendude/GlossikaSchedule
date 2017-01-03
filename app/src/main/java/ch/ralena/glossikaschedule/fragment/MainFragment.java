@@ -50,6 +50,8 @@ public class MainFragment extends Fragment implements ScheduleAdapter.OnItemClic
 		long id = bundle.getLong(MainActivity.TAG_SCHEDULE_ID);
 		mSchedule = mSqlManager.getSchedule(id);
 
+		((MainActivity) getActivity()).getSupportActionBar().setTitle(mSchedule.getLanguage() + " - " + mSchedule.getTitle());
+
 		findNextIncompleteDay();
 
 		View view = inflater.inflate(R.layout.fragment_main, container, false);

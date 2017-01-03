@@ -3,8 +3,9 @@
 			  xmlns:tools="http://schemas.android.com/tools"
 			  android:layout_width="match_parent"
 			  android:layout_height="wrap_content"
-			  android:foreground="?android:attr/selectableItemBackground"
-			  android:background="?android:attr/selectableItemBackground"
+			  android:background="@drawable/menu_language"
+			  android:clickable="true"
+			  android:focusable="true"
 			  android:orientation="horizontal"
 			  android:padding="3dp">
 
@@ -28,8 +29,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:maxLines="1"
 			android:ellipsize="end"
+			android:maxLines="1"
 			android:textSize="24sp"
 			tools:text="Arabic (Egyptian)"/>
 

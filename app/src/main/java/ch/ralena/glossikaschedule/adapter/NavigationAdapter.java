@@ -1,7 +1,6 @@
 package ch.ralena.glossikaschedule.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,7 +97,7 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 					ViewGroup parent = (ViewGroup) view.getParent();
 					int numViews = parent.getChildCount();
 					for (int i = 0; i < numViews; i++) {
-						parent.getChildAt(i).setBackgroundColor(Color.WHITE);
+						parent.getChildAt(i).setBackgroundResource(R.drawable.menu_language);
 					}
 					mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
 					mListener.onScheduleClicked(mSchedule);
@@ -110,8 +109,6 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 			mSchedule = schedule;
 			if (mCurrentPosition == position) {
 				mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
-			} else {
-				mView.setBackgroundColor(Color.WHITE);
 			}
 			mLanguageName.setText(schedule.getLanguage());
 			mScheduleType.setText(schedule.getTitle());

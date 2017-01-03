@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.LanguageSpinnerAdapter;
 import ch.ralena.glossikaschedule.adapter.ScheduleSpinnerAdapter;
@@ -45,6 +46,8 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		((MainActivity) getActivity()).getSupportActionBar().setTitle("New Schedule");
+
 		View view = inflater.inflate(R.layout.fragment_new_schedule, container, false);
 		mScheduleSpinner = (Spinner) view.findViewById(R.id.scheduleSpinner);
 		ScheduleSpinnerAdapter scheduleSpinnerAdapter = new ScheduleSpinnerAdapter(getActivity(), R.layout.item_schedule_spinner, ScheduleData.getScheduleTypes());

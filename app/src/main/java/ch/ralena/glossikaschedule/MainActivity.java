@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 				super.onDrawerClosed(view);
 				invalidateOptionsMenu();
 			}
+
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				invalidateOptionsMenu();
@@ -109,15 +110,16 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
 		mNewScheduleFragment = (NewScheduleFragment) mFragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
 		if (mNewScheduleFragment == null) {
-			NewScheduleFragment newScheduleFragment = new NewScheduleFragment();
-			FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
-			if (mMainFragment != null) {
-				fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
-			}
-			fragmentTransaction.commit();
+			mNewScheduleFragment = new NewScheduleFragment();
 		}
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.fragmentPlaceHolder, mNewScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
+		if (mMainFragment != null) {
+			fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
+		}
+		fragmentTransaction.commit();
+
 	}
 
 	@Override
