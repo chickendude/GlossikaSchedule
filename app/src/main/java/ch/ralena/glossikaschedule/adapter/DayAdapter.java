@@ -45,6 +45,13 @@ public class DayAdapter extends RecyclerView.Adapter {
 		return mStudyItems.size();
 	}
 
+	public void changeAll(final boolean isChecked) {
+		for (StudyItem studyItem : mStudyItems) {
+			studyItem.setCompleted(isChecked);
+		}
+		notifyDataSetChanged();
+	}
+
 	private class ViewHolder extends RecyclerView.ViewHolder {
 		StudyItem mStudyItem;
 		CheckBox fileCheckBox;
