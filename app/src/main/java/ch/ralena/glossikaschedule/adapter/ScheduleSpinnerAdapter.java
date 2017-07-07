@@ -13,10 +13,6 @@ import java.util.List;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.ScheduleType;
 
-/**
- * Created by crater-windoze on 12/30/2016.
- */
-
 public class ScheduleSpinnerAdapter extends ArrayAdapter<ScheduleType> {
 	List<ScheduleType> mScheduleTypes;
 	LayoutInflater mInflater;
@@ -42,11 +38,14 @@ public class ScheduleSpinnerAdapter extends ArrayAdapter<ScheduleType> {
 		ScheduleType scheduleType = mScheduleTypes.get(position);
 		View view = mInflater.inflate(R.layout.item_schedule_spinner, parent, false);
 		TextView title = (TextView) view.findViewById(R.id.titleLabel);
-		title.setText(scheduleType.getTitle());
 		TextView summary = (TextView) view.findViewById(R.id.summaryLabel);
-		summary.setText(scheduleType.getSummary());
 		TextView minutesDay = (TextView) view.findViewById(R.id.minutesDayLabel);
+		TextView totalReps = (TextView) view.findViewById(R.id.repsLabel);
+
+		title.setText(scheduleType.getTitle());
+		summary.setText(scheduleType.getSummary());
 		minutesDay.setText(scheduleType.getMinutesDay() + " min\nday");
+		totalReps.setText(String.format("%,d", scheduleType.getTotalReps()) + " reps");
 		return view;
 	}
 

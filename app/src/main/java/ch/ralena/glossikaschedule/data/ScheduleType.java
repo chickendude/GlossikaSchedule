@@ -57,7 +57,7 @@ public class ScheduleType {
 		return mMinutesDay;
 	}
 
-	public int getmTotalReps() {
+	public int getTotalReps() {
 		return mTotalReps;
 	}
 }

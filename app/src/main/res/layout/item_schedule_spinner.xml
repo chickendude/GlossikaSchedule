@@ -45,6 +45,13 @@
 			android:textStyle="bold"
 			tools:text="20 min\nday"/>
 
+		<TextView
+			android:id="@+id/repsLabel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/clockImage"
+			android:textAlignment="center"
+			tools:text="57,000 reps"/>
 	</RelativeLayout>
 
 	<TextView
