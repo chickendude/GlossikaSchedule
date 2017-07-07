@@ -8,13 +8,15 @@ public class ScheduleType {
 	private String mTitle;
 	private String[][] mSchedule;
 	private int mMinutesDay;
+	private int mTotalReps;
 	private String mSummary;
 	private String mDescription;
 
-	public ScheduleType(String title, String[][] schedule, int minutesDay, String summary, String description) {
+	public ScheduleType(String title, String[][] schedule, int minutesDay, int totalReps, String summary, String description) {
 		mTitle = title;
 		mSchedule = schedule;
 		mMinutesDay = minutesDay;
+		mTotalReps = totalReps;
 		mSummary = summary;
 		mDescription = description;
 	}
@@ -53,5 +55,9 @@ public class ScheduleType {
 
 	public int getMinutesDay() {
 		return mMinutesDay;
+	}
+
+	public int getmTotalReps() {
+		return mTotalReps;
 	}
 }
