@@ -5,10 +5,6 @@ import java.util.List;
 
 import ch.ralena.glossikaschedule.R;
 
-/**
- * Created by crater-windoze on 12/31/2016.
- */
-
 public class LanguageData {
 	public static List<LanguageType> Languages;
 
@@ -35,28 +31,29 @@ public class LanguageData {
 		languages.add(new LanguageType("Finnish", R.drawable.flag_finnish));
 		languages.add(new LanguageType("French", R.drawable.flag_french));
 		languages.add(new LanguageType("German", R.drawable.flag_german));
-		languages.add(new LanguageType("Greek", R.drawable.flag_none));
-		languages.add(new LanguageType("Hindi", R.drawable.flag_none));
-		languages.add(new LanguageType("Hungarian", R.drawable.flag_none));
-		languages.add(new LanguageType("Icelandic", R.drawable.flag_none));
-		languages.add(new LanguageType("Indonesian", R.drawable.flag_none));
-		languages.add(new LanguageType("Italian", R.drawable.flag_none));
+		languages.add(new LanguageType("Greek", R.drawable.flag_greek));
+		languages.add(new LanguageType("Hindi", R.drawable.flag_hindi));
+		languages.add(new LanguageType("Hungarian", R.drawable.flag_hungarian));
+		languages.add(new LanguageType("Icelandic", R.drawable.flag_icelandic));
+		languages.add(new LanguageType("Indonesian", R.drawable.flag_indonesian));
+		languages.add(new LanguageType("Italian", R.drawable.flag_italian));
 		languages.add(new LanguageType("Japanese", R.drawable.flag_japanese));
-		languages.add(new LanguageType("Korean", R.drawable.flag_none));
-		languages.add(new LanguageType("Latvian", R.drawable.flag_none));
-		languages.add(new LanguageType("Lithuanian", R.drawable.flag_none));
-		languages.add(new LanguageType("Mongolian", R.drawable.flag_none));
-		languages.add(new LanguageType("Polish", R.drawable.flag_none));
-		languages.add(new LanguageType("Russian", R.drawable.flag_none));
-		languages.add(new LanguageType("Serbian", R.drawable.flag_none));
-		languages.add(new LanguageType("Slovak", R.drawable.flag_none));
+		languages.add(new LanguageType("Korean", R.drawable.flag_korean));
+		languages.add(new LanguageType("Latvian", R.drawable.flag_latvian));
+		languages.add(new LanguageType("Lithuanian", R.drawable.flag_lithuanian));
+		languages.add(new LanguageType("Mongolian", R.drawable.flag_mongolian));
+		languages.add(new LanguageType("Polish", R.drawable.flag_polish));
+		languages.add(new LanguageType("Russian", R.drawable.flag_russian));
+		languages.add(new LanguageType("Serbian", R.drawable.flag_serbian));
+		languages.add(new LanguageType("Slovak", R.drawable.flag_slovak));
 		languages.add(new LanguageType("Spanish (Mexico)", R.drawable.flag_spanish_mexico));
 		languages.add(new LanguageType("Spanish (Spain)", R.drawable.flag_spanish_spain));
 		languages.add(new LanguageType("Swahili", R.drawable.flag_none));
-		languages.add(new LanguageType("Thai", R.drawable.flag_none));
+		languages.add(new LanguageType("Tagalog", R.drawable.flag_tagalog));
+		languages.add(new LanguageType("Thai", R.drawable.flag_thai));
 		languages.add(new LanguageType("Turkish", R.drawable.flag_turkish));
-		languages.add(new LanguageType("Ukrainian", R.drawable.flag_none));
-		languages.add(new LanguageType("Vietnamese (Northern)", R.drawable.flag_none));
+		languages.add(new LanguageType("Ukrainian", R.drawable.flag_ukrainian));
+		languages.add(new LanguageType("Vietnamese (Northern)", R.drawable.flag_vietnamese_north));
 
 		return languages;
 	}
