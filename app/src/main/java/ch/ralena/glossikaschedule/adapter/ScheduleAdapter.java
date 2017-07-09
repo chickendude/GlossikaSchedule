@@ -13,23 +13,20 @@ import java.util.ArrayList;
 
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Day;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by crater-windoze on 12/27/2016.
  */
 
 public class ScheduleAdapter extends RecyclerView.Adapter {
-	public interface OnItemClickedListener {
-		void onItemClicked(Day day, int position);
-	}
-	ArrayList<Day> mDays;
-	OnItemClickedListener mListener;
-	Context mContext;
+	ArrayList<Day> days;
+	Context context;
+	PublishSubject<Day> observable = PublishSubject.create();
 
-	public ScheduleAdapter(ArrayList<Day> days, OnItemClickedListener listener, Context context) {
-		mDays = days;
-		mListener = listener;
-		mContext = context;
+	public ScheduleAdapter(ArrayList<Day> days, Context context) {
+		this.days = days;
+		this.context = context;
 	}
 
 	@Override
@@ -40,12 +37,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		((ViewHolder) holder).bindView(mDays.get(position), position);
+		((ViewHolder) holder).bindView(days.get(position), position);
 	}
 
 	@Override
 	public int getItemCount() {
-		return mDays.size();
+		return days.size();
+	}
+
+	public PublishSubject<Day> asObservable() {
+		return observable;
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,16 +67,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 			mDayLabel.setText(day.getDayNumber()+"");
 			mDay = day;
 			if (day.isCompleted()) {
-				mLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.schedule_item_complete_background));
+				mLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_item_complete_background));
 			} else {
-				mLayout.setBackground(ContextCompat.getDrawable(mContext, R.drawable.schedule_item_background));
+				mLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_item_background));
 			}
 		}
 
 		View.OnClickListener mOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mListener.onItemClicked(mDay, mPosition);
+				observable.onNext(mDay);
 			}
 		};
 	}

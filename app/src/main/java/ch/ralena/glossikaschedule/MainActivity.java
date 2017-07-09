@@ -33,49 +33,49 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String TAG_SCHEDULE_ID = "schedule_id";
 
-	DrawerLayout mDrawerLayout;
-	MainFragment mMainFragment;
-	NewScheduleFragment mNewScheduleFragment;
-	private SqlManager mSqlManager;
-	private FragmentManager mFragmentManager;
-	NavigationAdapter mNavigationAdapter;
-	ActionBarDrawerToggle mDrawerToggle;
+	DrawerLayout drawerLayout;
+	MainFragment mainFragment;
+	NewScheduleFragment newScheduleFragment;
+	private SqlManager sqlManager;
+	private FragmentManager fragmentManager;
+	NavigationAdapter navigationAdapter;
+	ActionBarDrawerToggle drawerToggle;
 
-	ArrayList<Schedule> mSchedules;
-	Schedule mLoadedSchedule;
+	ArrayList<Schedule> schedules;
+	Schedule loadedSchedule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
 		// set up toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
 		// set up sql and fragments
-		mSqlManager = new SqlManager(this);
-		mFragmentManager = getSupportFragmentManager();
+		sqlManager = new SqlManager(this);
+		fragmentManager = getSupportFragmentManager();
 
-		mSchedules = mSqlManager.getSchedules();
+		schedules = sqlManager.getSchedules();
 
-		if (mSchedules.size() == 0) {
+		if (schedules.size() == 0) {
 			loadNewScheduleFragment();
 		} else {
-			loadMainFragment(mSchedules.get(0));
+			loadMainFragment(schedules.get(0));
 		}
 
 		// set up nav drawer
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		setupNavigationDrawer();
 	}
 
 	private void setupNavigationDrawer() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
 				invalidateOptionsMenu();
@@ -86,52 +86,52 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 				invalidateOptionsMenu();
 			}
 		};
-		mDrawerToggle.syncState();
-		mDrawerToggle.setDrawerIndicatorEnabled(true);
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		drawerToggle.syncState();
+		drawerToggle.setDrawerIndicatorEnabled(true);
+		drawerLayout.setDrawerListener(drawerToggle);
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.navigationRecyclerView);
-		mNavigationAdapter = new NavigationAdapter(this, mSchedules, 0);
-		recyclerView.setAdapter(mNavigationAdapter);
+		navigationAdapter = new NavigationAdapter(this, schedules, 0);
+		recyclerView.setAdapter(navigationAdapter);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
 	}
 
 	private void loadMainFragment(Schedule schedule) {
-		if (mNavigationAdapter != null) {
-			int position = mSchedules.indexOf(schedule);
-			mNavigationAdapter.setCurrentPosition(position);
-			mNavigationAdapter.notifyDataSetChanged();
+		if (navigationAdapter != null) {
+			int position = schedules.indexOf(schedule);
+			navigationAdapter.setCurrentPosition(position);
+			navigationAdapter.notifyDataSetChanged();
 		}
-		mLoadedSchedule = schedule;
-		mDrawerLayout.closeDrawers();
-		mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
-		if (mMainFragment != null) {
-			mFragmentManager
+		loadedSchedule = schedule;
+		drawerLayout.closeDrawers();
+		mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
+		if (mainFragment != null) {
+			fragmentManager
 					.beginTransaction()
-					.remove(mMainFragment)
+					.remove(mainFragment)
 					.commit();
 		}
-		mMainFragment = new MainFragment();
+		mainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
 		bundle.putLong(TAG_SCHEDULE_ID, schedule.getId());
-		mMainFragment.setArguments(bundle);
-		mFragmentManager
+		mainFragment.setArguments(bundle);
+		fragmentManager
 				.beginTransaction()
-				.replace(R.id.fragmentPlaceHolder, mMainFragment, MAIN_FRAGMENT_TAG)
+				.replace(R.id.fragmentPlaceHolder, mainFragment, MAIN_FRAGMENT_TAG)
 				.commit();
 	}
 
 	private void loadNewScheduleFragment() {
-		mDrawerLayout.closeDrawers();
-		mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
-		mNewScheduleFragment = (NewScheduleFragment) mFragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
-		if (mNewScheduleFragment == null) {
-			mNewScheduleFragment = new NewScheduleFragment();
+		drawerLayout.closeDrawers();
+		mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
+		newScheduleFragment = (NewScheduleFragment) fragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
+		if (newScheduleFragment == null) {
+			newScheduleFragment = new NewScheduleFragment();
 		}
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.fragmentPlaceHolder, mNewScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
-		if (mMainFragment != null) {
+				.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
+		if (mainFragment != null) {
 			fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
 		}
 		fragmentTransaction.commit();
@@ -141,13 +141,13 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	@Override
 	public void onScheduleCreated(Schedule schedule) {
 		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		mSchedules.add(schedule);
+		schedules.add(schedule);
 		loadMainFragment(schedule);
 	}
 
 	@Override
 	public void onItemChecked(ArrayList<StudyItem> studyItems) {
-		mMainFragment.saveDay();
+		mainFragment.saveDay();
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				mDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
+				drawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
 				return true;
 			case R.id.action_delete:
 				deleteSchedule();
@@ -175,16 +175,16 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void deleteSchedule() {
-		final Snackbar snackbar = Snackbar.make(findViewById(R.id.fragmentPlaceHolder), "Delete " + mLoadedSchedule.getLanguage() + "?\n(Can't be undone!)", Snackbar.LENGTH_INDEFINITE);
+		final Snackbar snackbar = Snackbar.make(findViewById(R.id.fragmentPlaceHolder), "Delete " + loadedSchedule.getLanguage() + "?\n(Can't be undone!)", Snackbar.LENGTH_INDEFINITE);
 		snackbar.setAction("Delete", new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mSqlManager.deleteSchedule(mLoadedSchedule);
-				int position = mSchedules.indexOf(mLoadedSchedule);
-				mSchedules.remove(mLoadedSchedule);
-				mNavigationAdapter.notifyItemRemoved(position);
+				sqlManager.deleteSchedule(loadedSchedule);
+				int position = schedules.indexOf(loadedSchedule);
+				schedules.remove(loadedSchedule);
+				navigationAdapter.notifyItemRemoved(position);
 				if (position > 0) position--;
-				loadMainFragment(mSchedules.get(position));
+				loadMainFragment(schedules.get(position));
 				snackbar.dismiss();
 			}
 		});
