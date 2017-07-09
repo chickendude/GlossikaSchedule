@@ -18,8 +18,6 @@ import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.StudyItem;
 import ch.ralena.glossikaschedule.sql.SqlManager;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
@@ -54,13 +52,7 @@ public class MainFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_main, container, false);
 		// set up adapter and subscribe to clicks on a day
 		adapter = new ScheduleAdapter(schedule.getSchedule(), getContext());
-		adapter.asObservable().subscribe(new Consumer<Day>() {
-			@Override
-			public void accept(@NonNull Day day) throws Exception {
-				currentDay = day;
-				showDay(day);
-			}
-		});
+		adapter.asObservable().subscribe(this::showDay);
 		// set up recycler view
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.scheduleRecyclerView);
 		recyclerView.setAdapter(adapter);
@@ -72,7 +64,6 @@ public class MainFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.d(TAG, "Start");
 	}
 
 	@Override
@@ -84,7 +75,10 @@ public class MainFragment extends Fragment {
 		}
 	}
 
+	// loads a dialog fragment with checkboxes for the recordings you need to study for that day
 	public void showDay(Day day) {
+		currentDay = day;
+		boolean areEmptyDays = areEmptyDays();
 		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
 		if (dayFragment == null) {
 			dayFragment = new DayFragment();
@@ -94,6 +88,11 @@ public class MainFragment extends Fragment {
 			dayFragment.setArguments(bundle);
 			dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
 		}
+	}
+
+	private boolean areEmptyDays() {
+
+		return false;
 	}
 
 	private void findNextIncompleteDay() {
