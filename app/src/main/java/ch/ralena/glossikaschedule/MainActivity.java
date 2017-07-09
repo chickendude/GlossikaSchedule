@@ -185,7 +185,11 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 			navigationAdapter.notifyItemRemoved(position);
 			if (position > 0)
 				position--;
-			loadMainFragment(schedules.get(position));
+			if (schedules.size() > 0) {
+				loadMainFragment(schedules.get(position));
+			} else {
+				loadNewScheduleFragment();
+			}
 			snackbar.dismiss();
 		});
 		snackbar.show();
