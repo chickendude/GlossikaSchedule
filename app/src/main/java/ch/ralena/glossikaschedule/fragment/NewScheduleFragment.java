@@ -71,17 +71,13 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 		});
 
 		Button button = (Button) view.findViewById(R.id.createScheduleButton);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-				SqlManager sqlManager = new SqlManager(getActivity());
-				Schedule schedule;
-				schedule = ScheduleData.createSchedule(mScheduleType, mLanguageType.getName());
-				long id = sqlManager.createSchedule(schedule);
-				schedule.setId(id);
-				mListener.onScheduleCreated(schedule);
-			}
+		button.setOnClickListener(v -> {
+			SqlManager sqlManager = new SqlManager(getActivity());
+			Schedule schedule;
+			schedule = ScheduleData.createSchedule(mScheduleType, mLanguageType.getName());
+			long id = sqlManager.createSchedule(schedule);
+			schedule.setId(id);
+			mListener.onScheduleCreated(schedule);
 		});
 		return view;
 	}

@@ -178,17 +178,15 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 	private void deleteSchedule() {
 		final Snackbar snackbar = Snackbar.make(findViewById(R.id.fragmentPlaceHolder), "Delete " + loadedSchedule.getLanguage() + "?\n(Can't be undone!)", Snackbar.LENGTH_INDEFINITE);
-		snackbar.setAction("Delete", new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				sqlManager.deleteSchedule(loadedSchedule);
-				int position = schedules.indexOf(loadedSchedule);
-				schedules.remove(loadedSchedule);
-				navigationAdapter.notifyItemRemoved(position);
-				if (position > 0) position--;
-				loadMainFragment(schedules.get(position));
-				snackbar.dismiss();
-			}
+		snackbar.setAction("Delete", view -> {
+			sqlManager.deleteSchedule(loadedSchedule);
+			int position = schedules.indexOf(loadedSchedule);
+			schedules.remove(loadedSchedule);
+			navigationAdapter.notifyItemRemoved(position);
+			if (position > 0)
+				position--;
+			loadMainFragment(schedules.get(position));
+			snackbar.dismiss();
 		});
 		snackbar.show();
 	}
