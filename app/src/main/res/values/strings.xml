@@ -2,4 +2,5 @@
 	<string name="app_name">Glossika Schedule</string>
 	<string name="drawer_open">Open navigation drawer</string>
 	<string name="drawer_close">Close navigation drawer</string>
+	<string name="mark_days_as_complete">Would you like to mark all days before Day %d as complete? (Swipe right to dismiss)</string>
 </resources>

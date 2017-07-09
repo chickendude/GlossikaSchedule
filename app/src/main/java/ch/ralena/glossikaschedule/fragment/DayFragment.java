@@ -26,7 +26,7 @@ public class DayFragment extends DialogFragment {
 
 		// get our parameters
 		Bundle bundle = getArguments();
-		Day day = bundle.getParcelable(MainFragment.CURRENT_DAY);
+		Day day = bundle.getParcelable(MainFragment.TAG_CURRENT_DAY);
 
 		// inflate views
 		View view = inflater.inflate(R.layout.fragment_day, container, false);

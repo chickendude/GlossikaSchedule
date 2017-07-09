@@ -59,8 +59,10 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		sqlManager = new SqlManager(this);
 		fragmentManager = getSupportFragmentManager();
 
+		// load schedules from database
 		schedules = sqlManager.getSchedules();
 
+		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
 			loadNewScheduleFragment();
 		} else {

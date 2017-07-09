@@ -2,6 +2,7 @@ package ch.ralena.glossikaschedule.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
@@ -21,21 +24,26 @@ import ch.ralena.glossikaschedule.sql.SqlManager;
 
 public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
-	public static final String CURRENT_DAY = "current_day";
-	private static final String TAG_DIALOG_OPEN = "dialog_open";
+	public static final String TAG_CURRENT_DAY = "tag_current_day";
+	//	private static final String TAG_DIALOG_OPEN = "tag_dialog_open";
 	private static final String DAY_FRAGMENT_TAG = "day_fragment";
+	private static final String TAG_ARE_EMPTY = "tag_are_empty";
 
 	SqlManager sqlManager;
 	private Schedule schedule;
 	private int currentDayId = -1;
 	private Day currentDay;
 	private ScheduleAdapter adapter;
+	private View rootView;
+	private boolean isDialogReady;
+	private Snackbar snackbar;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Log.d(TAG, "Create view");
 		sqlManager = new SqlManager(getContext());
+		isDialogReady = true;
 
 		// get the arguments passed in
 		Bundle bundle = getArguments();
@@ -45,20 +53,23 @@ public class MainFragment extends Fragment {
 		// set up title
 		((MainActivity) getActivity()).getSupportActionBar().setTitle(schedule.getLanguage() + " - " + schedule.getTitle());
 
-		// skip over all days that have already been completed
-		findNextIncompleteDay();
-
 		// load views
-		View view = inflater.inflate(R.layout.fragment_main, container, false);
+		rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
 		// set up adapter and subscribe to clicks on a day
 		adapter = new ScheduleAdapter(schedule.getSchedule(), getContext());
 		adapter.asObservable().subscribe(this::showDay);
+
 		// set up recycler view
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.scheduleRecyclerView);
+		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.scheduleRecyclerView);
 		recyclerView.setAdapter(adapter);
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
 		recyclerView.setLayoutManager(layoutManager);
-		return view;
+
+		// skip over all days that have already been completed
+		findNextIncompleteDay();
+
+		return rootView;
 	}
 
 	@Override
@@ -78,21 +89,62 @@ public class MainFragment extends Fragment {
 	// loads a dialog fragment with checkboxes for the recordings you need to study for that day
 	public void showDay(Day day) {
 		currentDay = day;
-		boolean areEmptyDays = areEmptyDays();
+		if (isDialogReady) {
+			if (areEmptyDays()) {
+				askToFillInDays();
+			} else {
+				openDayDialog();
+			}
+		} else {
+			snackbar.setText(String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()));
+		}
+	}
+
+	private void openDayDialog() {
 		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
 		if (dayFragment == null) {
 			dayFragment = new DayFragment();
 			dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(CURRENT_DAY, day);
+			bundle.putParcelable(TAG_CURRENT_DAY, currentDay);
 			dayFragment.setArguments(bundle);
 			dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
 		}
 	}
 
-	private boolean areEmptyDays() {
+	private void askToFillInDays() {
+		isDialogReady = false;
+		snackbar = Snackbar.make(rootView,
+				String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()),
+				Snackbar.LENGTH_INDEFINITE)
+				.setAction("Yes", v -> {
+					schedule.getSchedule()
+							.stream()
+							.filter(day -> day.getDayNumber() < currentDay.getDayNumber())
+							.forEach(day -> {
+								// mark day and study items as completed
+								day.setCompleted(true);
+								day.getStudyItems().forEach(item -> item.setCompleted(true));
+								sqlManager.updateDay(day);
+							});
+					adapter.notifyDataSetChanged();
+				}).addCallback(new Snackbar.Callback() {
+					@Override
+					public void onDismissed(Snackbar transientBottomBar, int event) {
+						super.onDismissed(transientBottomBar, event);
+						isDialogReady = true;
+						openDayDialog();
+					}
+				});
+		snackbar.show();
+	}
 
-		return false;
+	private boolean areEmptyDays() {
+		ArrayList<Day> days = schedule.getSchedule();
+		int currentDayIndex = currentDay.getDayNumber();
+		return days.stream()
+				.filter(day -> day.getDayNumber() < currentDayIndex)
+				.anyMatch(day -> !day.isCompleted());
 	}
 
 	private void findNextIncompleteDay() {
