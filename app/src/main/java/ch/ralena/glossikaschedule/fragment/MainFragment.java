@@ -118,15 +118,15 @@ public class MainFragment extends Fragment {
 				String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()),
 				Snackbar.LENGTH_INDEFINITE)
 				.setAction("Yes", v -> {
-					schedule.getSchedule()
-							.stream()
-							.filter(day -> day.getDayNumber() < currentDay.getDayNumber())
-							.forEach(day -> {
-								// mark day and study items as completed
-								day.setCompleted(true);
-								day.getStudyItems().forEach(item -> item.setCompleted(true));
-								sqlManager.updateDay(day);
-							});
+					for (Day day: schedule.getSchedule()) {
+						if (day.getDayNumber() < currentDay.getDayNumber()) {
+							day.setCompleted(true);
+							for (StudyItem studyItem : day.getStudyItems()) {
+								studyItem.setCompleted(true);
+							}
+							sqlManager.updateDay(day);
+						}
+					}
 					adapter.notifyDataSetChanged();
 				}).addCallback(new Snackbar.Callback() {
 					@Override
@@ -142,9 +142,12 @@ public class MainFragment extends Fragment {
 	private boolean areEmptyDays() {
 		ArrayList<Day> days = schedule.getSchedule();
 		int currentDayIndex = currentDay.getDayNumber();
-		return days.stream()
-				.filter(day -> day.getDayNumber() < currentDayIndex)
-				.anyMatch(day -> !day.isCompleted());
+		boolean isEmpty = false;
+		for (Day day : days) {
+			if (day.getDayNumber() < currentDayIndex && !day.isCompleted())
+				isEmpty = true;
+		}
+		return isEmpty;
 	}
 
 	private void findNextIncompleteDay() {
