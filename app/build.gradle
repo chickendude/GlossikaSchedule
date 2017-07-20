@@ -8,8 +8,8 @@ android {
 		applicationId "ch.ralena.glossikaschedule"
 		minSdkVersion 19
 		targetSdkVersion 25
-		versionCode 4
-		versionName "1.1.1"
+		versionCode 5
+		versionName "1.1.2"
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	compileOptions {
@@ -26,9 +26,12 @@ android {
 
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
+	// Testing
 	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	})
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:1.10.19'
 	// Android
 	compile 'com.android.support:appcompat-v7:25.3.1'
 	compile 'com.android.support:recyclerview-v7:25.3.1'

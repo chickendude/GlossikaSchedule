@@ -3,54 +3,82 @@ package ch.ralena.glossikaschedule.object;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-/**
- * Created by crater-windoze on 12/27/2016.
- */
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Day implements Parcelable {
-	ArrayList<StudyItem> mStudyItems;
-	int mDayNumber;
-	boolean mIsCompleted;
+	ArrayList<StudyItem> studyItems;
+	int dayNumber;
+	boolean isCompleted;
+	String dateCompleted;
 
 	public Day(ArrayList<StudyItem> studyItems, int dayNumber) {
-		mStudyItems = studyItems;
-		mDayNumber = dayNumber;
-		mIsCompleted = true;
+		this.studyItems = studyItems;
+		this.dayNumber = dayNumber;
+		isCompleted = true;
+		dateCompleted = "";
 		for (StudyItem studyItem : studyItems) {
-			mIsCompleted = mIsCompleted & studyItem.isCompleted();
+			isCompleted = isCompleted & studyItem.isCompleted();
 		}
 	}
 
-	protected Day(Parcel in) {
-		mStudyItems = in.createTypedArrayList(StudyItem.CREATOR);
-		mDayNumber = in.readInt();
-		mIsCompleted = in.readByte() != 0;
-	}
-
 	public ArrayList<StudyItem> getStudyItems() {
-		return mStudyItems;
+		return studyItems;
 	}
 
 	public void setStudyItems(ArrayList<StudyItem> studyItems) {
-		mStudyItems = studyItems;
+		this.studyItems = studyItems;
 	}
 
 	public int getDayNumber() {
-		return mDayNumber;
+		return dayNumber;
 	}
 
 	public void setDayNumber(int dayNumber) {
-		mDayNumber = dayNumber;
+		this.dayNumber = dayNumber;
 	}
 
 	public boolean isCompleted() {
-		return mIsCompleted;
+		return isCompleted;
 	}
 
 	public void setCompleted(boolean completed) {
-		mIsCompleted = completed;
+		isCompleted = completed;
+	}
+
+	public String getDateCompleted() {
+		return dateCompleted;
+	}
+
+	public void updateDateCompleted() {
+		// check if all study items have been completed
+		boolean allCompleted = true;
+		for (StudyItem item : studyItems) {
+			allCompleted = allCompleted && item.isCompleted();
+		}
+		// if so, save today's date as the new completed date
+		if (allCompleted) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy");
+			dateFormat.setTimeZone(TimeZone.getDefault());
+			dateCompleted = dateFormat.format(new Date());
+		}
+	}
+
+	public boolean completedToday() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy");
+		dateFormat.setTimeZone(TimeZone.getDefault());
+		String today = dateFormat.format(new Date());
+		return dateCompleted.equals(today);
+	}
+
+	// parcelable implementation
+	protected Day(Parcel in) {
+		studyItems = in.createTypedArrayList(StudyItem.CREATOR);
+		dayNumber = in.readInt();
+		isCompleted = in.readByte() != 0;
+		dateCompleted = in.readString();
 	}
 
 	@Override
@@ -60,9 +88,10 @@ public class Day implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		parcel.writeTypedList(mStudyItems);
-		parcel.writeInt(mDayNumber);
-		parcel.writeByte((byte) (mIsCompleted ? 1 : 0));
+		parcel.writeTypedList(studyItems);
+		parcel.writeInt(dayNumber);
+		parcel.writeByte((byte) (isCompleted ? 1 : 0));
+		parcel.writeString(dateCompleted);
 	}
 
 	public static final Creator<Day> CREATOR = new Creator<Day>() {

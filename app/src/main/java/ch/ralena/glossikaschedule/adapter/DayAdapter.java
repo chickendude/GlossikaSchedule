@@ -10,23 +10,22 @@ import android.widget.CompoundButton;
 import java.util.ArrayList;
 
 import ch.ralena.glossikaschedule.R;
+import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.StudyItem;
-
-/**
- * Created by crater-windoze on 12/27/2016.
- */
 
 public class DayAdapter extends RecyclerView.Adapter {
 	public interface OnItemCheckedListener {
 		void onItemChecked(ArrayList<StudyItem> studyItems);
 	}
 
-	ArrayList<StudyItem> mStudyItems;
-	OnItemCheckedListener mListener;
+	Day day;
+	ArrayList<StudyItem> studyItems;
+	OnItemCheckedListener listener;
 
-	public DayAdapter(ArrayList<StudyItem> studyItems, OnItemCheckedListener listener) {
-		mStudyItems = studyItems;
-		mListener = listener;
+	public DayAdapter(Day day, OnItemCheckedListener listener) {
+		this.day = day;
+		this.studyItems = day.getStudyItems();
+		this.listener = listener;
 	}
 
 	@Override
@@ -37,23 +36,23 @@ public class DayAdapter extends RecyclerView.Adapter {
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		((ViewHolder) holder).bindView(mStudyItems.get(position));
+		((ViewHolder) holder).bindView(studyItems.get(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return mStudyItems.size();
+		return studyItems.size();
 	}
 
 	public void changeAll(final boolean isChecked) {
-		for (StudyItem studyItem : mStudyItems) {
+		for (StudyItem studyItem : studyItems) {
 			studyItem.setCompleted(isChecked);
 		}
 		notifyDataSetChanged();
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
-		StudyItem mStudyItem;
+		StudyItem studyItem;
 		CheckBox fileCheckBox;
 
 		public ViewHolder(View view) {
@@ -63,7 +62,7 @@ public class DayAdapter extends RecyclerView.Adapter {
 		}
 
 		public void bindView(StudyItem studyItem) {
-			mStudyItem = studyItem;
+			this.studyItem = studyItem;
 			fileCheckBox.setText(studyItem.getTitle());
 			fileCheckBox.setChecked(studyItem.isCompleted());
 		}
@@ -71,8 +70,9 @@ public class DayAdapter extends RecyclerView.Adapter {
 		CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-				mStudyItem.setCompleted(isChecked);
-				mListener.onItemChecked(mStudyItems);
+				studyItem.setCompleted(isChecked);
+				day.updateDateCompleted();
+				listener.onItemChecked(studyItems);
 			}
 		};
 	}
