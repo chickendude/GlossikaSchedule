@@ -2,7 +2,6 @@ package ch.ralena.glossikaschedule.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,14 +45,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
-		CardView mLayout;
 		TextView mDayLabel;
 		Day mDay;
 		int mPosition;
 
 		public ViewHolder(View view) {
 			super(view);
-			mLayout = (CardView) view;
 			mDayLabel = (TextView) view.findViewById(R.id.dayLabel);
 			mDayLabel.setOnClickListener(mOnClickListener);
 		}
@@ -67,10 +64,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
 					mDayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorAccentLight));
 				} else {
-					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 				}
 			} else {
-				mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+				mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
 			}
 		}
 

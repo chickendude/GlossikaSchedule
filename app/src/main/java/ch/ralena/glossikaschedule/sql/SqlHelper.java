@@ -5,12 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-/**
- * Created by crater-windoze on 12/28/2016.
- */
-
 public class SqlHelper extends SQLiteOpenHelper {
-	private static final int DB_VERSION = 1;
+	private static final int DB_VERSION = 2;
 	private static final String DB_NAME = "glossikaschedule.db";
 
 	// SCHEDULE fields
@@ -25,6 +21,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 	public static final String TABLE_STUDY_ITEM = "STUDY_ITEM";
 	public static final String COL_STUDY_DESCRIPTION = "DESCRIPTION";
 	public static final String COL_STUDY_COMPLETED = "COMPLETED";
+	public static final String COL_STUDY_DATE_COMPLETED = "DATE_COMPLETED";
 	public static final String COL_STUDY_FOREIGNKEY_DAY = "DAY_ID";
 
 	// sql statements
@@ -47,6 +44,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 					COL_STUDY_DESCRIPTION + " TEXT, " +
 					COL_STUDY_COMPLETED + " INTEGER, " +
 					COL_STUDY_FOREIGNKEY_DAY + " INTEGER, " +
+					COL_STUDY_DATE_COMPLETED + " INTEGER, " +
 					"FOREIGN KEY(" + COL_STUDY_FOREIGNKEY_DAY + ") REFERENCES " + TABLE_DAY + "(_ID)" +
 					" )";
 
