@@ -55,7 +55,7 @@ public class DayFragment extends DialogFragment {
 
 		// set up recycler view and adapter
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-		final DayAdapter adapter = new DayAdapter(day, (DayAdapter.OnItemCheckedListener)getActivity());
+		final DayAdapter adapter = new DayAdapter(day, (DayAdapter.OnItemCheckedListener) getActivity());
 		recyclerView.setAdapter(adapter);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		recyclerView.setLayoutManager(layoutManager);
@@ -64,8 +64,10 @@ public class DayFragment extends DialogFragment {
 		checkAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
 			checkAll.setChecked(false);
 			adapter.changeAll(isChecked);
+
 			// if they've all been checked, update the day's completion date
-			day.updateDateCompleted();
+			realm.executeTransaction(r -> day.updateDateCompleted());
+
 			// we need to wait a short while, otherwise the changes won't get marked
 			new Handler().postDelayed(this::dismiss, 400);
 		});

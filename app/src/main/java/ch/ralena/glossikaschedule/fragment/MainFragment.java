@@ -102,6 +102,7 @@ public class MainFragment extends Fragment {
 		}
 	}
 
+	// creates the dialog fragment with the day's files
 	private void openDayDialog() {
 		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
 		if (dayFragment == null) {
@@ -114,6 +115,7 @@ public class MainFragment extends Fragment {
 		}
 	}
 
+	// fill in all days from start to current day
 	private void askToFillInDays() {
 		isDialogReady = false;
 		snackbar = Snackbar.make(rootView,
@@ -122,10 +124,14 @@ public class MainFragment extends Fragment {
 				.setAction("Yes", v -> {
 					for (Day day : schedule.getSchedule()) {
 						if (day.getDayNumber() < currentDay.getDayNumber()) {
-							realm.executeTransaction(r -> day.setCompleted(true));
 							for (StudyItem studyItem : day.getStudyItems()) {
 								realm.executeTransaction(r -> studyItem.setCompleted(true));
 							}
+							realm.executeTransaction(r -> {
+										day.setCompleted(true);
+										day.updateDateCompleted();
+									}
+							);
 						}
 					}
 					adapter.notifyDataSetChanged();

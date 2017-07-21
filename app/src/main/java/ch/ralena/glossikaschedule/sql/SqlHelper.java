@@ -19,7 +19,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		if (oldVersion < 2) {
-			// switch over to realm data
+			// todo: switch over to realm data
 		}
 	}
 }

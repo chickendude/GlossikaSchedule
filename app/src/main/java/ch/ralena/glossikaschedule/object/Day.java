@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
@@ -88,8 +87,7 @@ public class Day extends RealmObject {
 			}
 			// if so, save today's date as the new completed date
 			if (allCompleted) {
-				Realm.getDefaultInstance()
-						.executeTransaction(r -> dateCompleted = Calendar.getInstance().getTimeInMillis());
+				dateCompleted = Calendar.getInstance().getTimeInMillis();
 			}
 		}
 	}
