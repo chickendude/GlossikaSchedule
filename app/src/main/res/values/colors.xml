@@ -7,4 +7,5 @@
 	<color name="colorAccent">#009688</color>
 	<color name="colorAccentLight">#B2DFDB</color>
 	<color name="colorBackground">#E8EAF6</color>
+	<color name="colorTextLight">#757575</color>
 </resources>

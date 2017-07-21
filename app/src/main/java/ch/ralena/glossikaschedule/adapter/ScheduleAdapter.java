@@ -59,15 +59,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 			mPosition = position;
 			mDayLabel.setText(day.getDayNumber()+"");
 			mDay = day;
+			mDayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 			if (day.isCompleted()) {
 				if (day.wasCompletedToday()) {
 					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
-					mDayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorAccentLight));
 				} else {
 					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 				}
 			} else {
 				mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
+				mDayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
 			}
 		}
 
