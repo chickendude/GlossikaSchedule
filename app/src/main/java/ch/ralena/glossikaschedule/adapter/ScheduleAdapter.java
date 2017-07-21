@@ -8,18 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Day;
 import io.reactivex.subjects.PublishSubject;
+import io.realm.RealmList;
 
 public class ScheduleAdapter extends RecyclerView.Adapter {
-	ArrayList<Day> days;
+	RealmList<Day> days;
 	Context context;
 	PublishSubject<Day> observable = PublishSubject.create();
 
-	public ScheduleAdapter(ArrayList<Day> days, Context context) {
+	public ScheduleAdapter(RealmList<Day> days, Context context) {
 		this.days = days;
 		this.context = context;
 	}

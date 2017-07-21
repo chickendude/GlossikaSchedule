@@ -12,24 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.ScheduleAdapter;
 import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.Schedule;
 import ch.ralena.glossikaschedule.object.StudyItem;
-import ch.ralena.glossikaschedule.sql.SqlManager;
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
-	public static final String TAG_CURRENT_DAY = "tag_current_day";
+	public static final String TAG_DAY_ID = "tag_day_id";
 	//	private static final String TAG_DIALOG_OPEN = "tag_dialog_open";
 	private static final String DAY_FRAGMENT_TAG = "day_fragment";
 	private static final String TAG_ARE_EMPTY = "tag_are_empty";
 
-	SqlManager sqlManager;
 	private Schedule schedule;
 	private int currentDayId = -1;
 	private Day currentDay;
@@ -38,17 +36,21 @@ public class MainFragment extends Fragment {
 	private boolean isDialogReady;
 	private Snackbar snackbar;
 
+	Realm realm;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Log.d(TAG, "Create view");
-		sqlManager = new SqlManager(getContext());
 		isDialogReady = true;
+
+		// initialize realm object
+		realm = Realm.getDefaultInstance();
 
 		// get the arguments passed in
 		Bundle bundle = getArguments();
-		long id = bundle.getLong(MainActivity.TAG_SCHEDULE_ID);
-		schedule = sqlManager.getSchedule(id);
+		String id = bundle.getString(MainActivity.TAG_SCHEDULE_ID);
+		schedule = realm.where(Schedule.class).equalTo("id", id).findFirst();
 
 		// set up title
 		((MainActivity) getActivity()).getSupportActionBar().setTitle(schedule.getLanguage() + " - " + schedule.getTitle());
@@ -106,7 +108,7 @@ public class MainFragment extends Fragment {
 			dayFragment = new DayFragment();
 			dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(TAG_CURRENT_DAY, currentDay);
+			bundle.putString(TAG_DAY_ID, currentDay.getId());
 			dayFragment.setArguments(bundle);
 			dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
 		}
@@ -118,13 +120,12 @@ public class MainFragment extends Fragment {
 				String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()),
 				Snackbar.LENGTH_INDEFINITE)
 				.setAction("Yes", v -> {
-					for (Day day: schedule.getSchedule()) {
+					for (Day day : schedule.getSchedule()) {
 						if (day.getDayNumber() < currentDay.getDayNumber()) {
-							day.setCompleted(true);
+							realm.executeTransaction(r -> day.setCompleted(true));
 							for (StudyItem studyItem : day.getStudyItems()) {
-								studyItem.setCompleted(true);
+								realm.executeTransaction(r -> studyItem.setCompleted(true));
 							}
-							sqlManager.updateDay(day);
 						}
 					}
 					adapter.notifyDataSetChanged();
@@ -140,12 +141,14 @@ public class MainFragment extends Fragment {
 	}
 
 	private boolean areEmptyDays() {
-		ArrayList<Day> days = schedule.getSchedule();
-		int currentDayIndex = currentDay.getDayNumber();
+		RealmList<Day> days = schedule.getSchedule();
 		boolean isEmpty = false;
-		for (Day day : days) {
-			if (day.getDayNumber() < currentDayIndex && !day.isCompleted())
-				isEmpty = true;
+		if (currentDay != null) {
+			int currentDayIndex = currentDay.getDayNumber();
+			for (Day day : days) {
+				if (day.getDayNumber() < currentDayIndex && !day.isCompleted())
+					isEmpty = true;
+			}
 		}
 		return isEmpty;
 	}
@@ -169,7 +172,8 @@ public class MainFragment extends Fragment {
 		return currentDay;
 	}
 
-	public void saveDay() {
+	public void updateDay() {
+		// check if all items have been checked
 		boolean isCompleted = true;
 		int numberCompleted = 0;
 		int total = currentDay.getStudyItems().size();
@@ -179,11 +183,13 @@ public class MainFragment extends Fragment {
 			}
 			isCompleted = isCompleted & studyItem.isCompleted();
 		}
-		currentDay.setCompleted(isCompleted);
+		boolean finalIsCompleted = isCompleted;
+		realm.executeTransaction(r -> currentDay.setCompleted(finalIsCompleted));
+
+		// if all items have been checked or all but one have been checked, update day's background
 		if (numberCompleted == total || numberCompleted == total - 1) {
 			int position = schedule.getSchedule().indexOf(currentDay);
 			adapter.notifyItemChanged(position);
 		}
-		sqlManager.updateDay(currentDay);
 	}
 }

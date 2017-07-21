@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
 
 android {
 	compileSdkVersion 26
@@ -41,4 +43,11 @@ dependencies {
 	// rxJava
 	compile 'io.reactivex.rxjava2:rxjava:2.1.0'
 	compile 'io.reactivex.rxjava2:rxandroid:2.0.0'
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+	debugCompile 'com.facebook.stetho:stetho:1.5.0'
+	debugCompile 'com.uphyca:stetho_realm:2.0.0'
+
+}
+repositories {
+	mavenCentral()
 }

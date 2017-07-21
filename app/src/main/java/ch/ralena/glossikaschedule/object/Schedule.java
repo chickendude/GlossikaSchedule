@@ -1,65 +1,75 @@
 package ch.ralena.glossikaschedule.object;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
 import ch.ralena.glossikaschedule.data.LanguageData;
 import ch.ralena.glossikaschedule.data.LanguageType;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by crater-windoze on 12/27/2016.
- */
+public class Schedule extends RealmObject {
+	@PrimaryKey
+	@Index
+	private String id = UUID.randomUUID().toString();
 
-public class Schedule {
-	long mId;
-	String mTitle;	// later switch to Schedule type?
-	String mLanguage;
-	ArrayList<Day> mSchedule;
+	String title;    // later switch to Schedule type?
+	String language;
+	RealmList<Day> schedule;
 
+	// constructor
+	public Schedule() { super(); }
 	public Schedule(String title, String language) {
-		mTitle = title;
-		mLanguage = language;
-		mSchedule = new ArrayList<>();
+		this.title = title;
+		this.language = language;
+		schedule = new RealmList<Day>();
+	}
+
+	// getters and setters
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
-		return mTitle;
+		return title;
 	}
 
 	public void setTitle(String title) {
-		mTitle = title;
+		this.title = title;
 	}
 
-	public ArrayList<Day> getSchedule() {
-		return mSchedule;
+	public RealmList<Day> getSchedule() {
+		return schedule;
 	}
 
-	public void setSchedule(ArrayList<Day> schedule) {
-		mSchedule = schedule;
+	public void setSchedule(RealmList<Day> schedule) {
+		this.schedule = schedule;
 	}
 
 	public void addDay(Day day) {
-		mSchedule.add(day);
+		schedule.add(day);
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public String getLanguage() {
-		return mLanguage;
+		return language;
 	}
 
 	public LanguageType getLanguageType() {
 		LanguageType languageType = null;
 		for (LanguageType language : LanguageData.Languages) {
-			if (mLanguage.equals(language.getName())) {
+			if (this.language.equals(language.getName())) {
 				return language;
 			}
 		}
 		return languageType;
-	}
-
-	public long getId() {
-		return mId;
-	}
-
-	public void setId(long id) {
-		mId = id;
 	}
 }

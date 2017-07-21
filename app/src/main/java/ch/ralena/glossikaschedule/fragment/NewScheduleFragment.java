@@ -18,8 +18,7 @@ import ch.ralena.glossikaschedule.adapter.ScheduleSpinnerAdapter;
 import ch.ralena.glossikaschedule.data.LanguageData;
 import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.data.ScheduleData;
-import ch.ralena.glossikaschedule.object.Schedule;
-import ch.ralena.glossikaschedule.sql.SqlManager;
+import io.realm.Realm;
 
 /**
  * Created by crater-windoze on 12/30/2016.
@@ -28,7 +27,7 @@ import ch.ralena.glossikaschedule.sql.SqlManager;
 public class NewScheduleFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 	public interface OnScheduleCreatedListener {
-		void onScheduleCreated(Schedule schedule);
+		void onScheduleCreated();
 	}
 
 	private Spinner mScheduleSpinner;
@@ -36,6 +35,7 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 	private int mScheduleType;
 	private LanguageType mLanguageType;
 	private OnScheduleCreatedListener mListener;
+	private Realm realm;
 
 	@Override
 	public void onAttach(Context context) {
@@ -47,6 +47,8 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		((MainActivity) getActivity()).getSupportActionBar().setTitle("New Schedule");
+
+		realm = Realm.getDefaultInstance();
 
 		View view = inflater.inflate(R.layout.fragment_new_schedule, container, false);
 		mScheduleSpinner = (Spinner) view.findViewById(R.id.scheduleSpinner);
@@ -72,12 +74,8 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 
 		Button button = (Button) view.findViewById(R.id.createScheduleButton);
 		button.setOnClickListener(v -> {
-			SqlManager sqlManager = new SqlManager(getActivity());
-			Schedule schedule;
-			schedule = ScheduleData.createSchedule(mScheduleType, mLanguageType.getName());
-			long id = sqlManager.createSchedule(schedule);
-			schedule.setId(id);
-			mListener.onScheduleCreated(schedule);
+			ScheduleData.createSchedule(realm, mScheduleType, mLanguageType.getName());
+			mListener.onScheduleCreated();
 		});
 		return view;
 	}

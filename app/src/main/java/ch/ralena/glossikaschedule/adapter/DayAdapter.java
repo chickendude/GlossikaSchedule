@@ -7,25 +7,27 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Day;
 import ch.ralena.glossikaschedule.object.StudyItem;
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class DayAdapter extends RecyclerView.Adapter {
 	public interface OnItemCheckedListener {
-		void onItemChecked(ArrayList<StudyItem> studyItems);
+		void onItemChecked();
 	}
 
-	Day day;
-	ArrayList<StudyItem> studyItems;
-	OnItemCheckedListener listener;
+	private Day day;
+	private RealmList<StudyItem> studyItems;
+	private OnItemCheckedListener listener;
+	private Realm realm;
 
 	public DayAdapter(Day day, OnItemCheckedListener listener) {
 		this.day = day;
 		this.studyItems = day.getStudyItems();
 		this.listener = listener;
+		realm = Realm.getDefaultInstance();
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class DayAdapter extends RecyclerView.Adapter {
 
 	public void changeAll(final boolean isChecked) {
 		for (StudyItem studyItem : studyItems) {
-			studyItem.setCompleted(isChecked);
+			realm.executeTransaction(r -> studyItem.setCompleted(isChecked));
 		}
 		notifyDataSetChanged();
 	}
@@ -70,9 +72,9 @@ public class DayAdapter extends RecyclerView.Adapter {
 		CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-				studyItem.setCompleted(isChecked);
+				realm.executeTransaction(r -> studyItem.setCompleted(isChecked));
 				day.updateDateCompleted();
-				listener.onItemChecked(studyItems);
+				listener.onItemChecked();
 			}
 		};
 	}

@@ -15,15 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.adapter.DayAdapter;
 import ch.ralena.glossikaschedule.adapter.NavigationAdapter;
 import ch.ralena.glossikaschedule.fragment.MainFragment;
 import ch.ralena.glossikaschedule.fragment.NewScheduleFragment;
 import ch.ralena.glossikaschedule.object.Schedule;
-import ch.ralena.glossikaschedule.object.StudyItem;
-import ch.ralena.glossikaschedule.sql.SqlManager;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 // TODO: 12/30/2016 mark currently selected study day
 public class MainActivity extends AppCompatActivity implements NewScheduleFragment.OnScheduleCreatedListener, DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
@@ -36,13 +34,14 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	DrawerLayout drawerLayout;
 	MainFragment mainFragment;
 	NewScheduleFragment newScheduleFragment;
-	private SqlManager sqlManager;
 	private FragmentManager fragmentManager;
 	NavigationAdapter navigationAdapter;
 	ActionBarDrawerToggle drawerToggle;
 
-	ArrayList<Schedule> schedules;
+	RealmResults<Schedule> schedules;
 	Schedule loadedSchedule;
+
+	private Realm realm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +54,17 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		// set up sql and fragments
-		sqlManager = new SqlManager(this);
 		fragmentManager = getSupportFragmentManager();
 
 		// load schedules from database
-		schedules = sqlManager.getSchedules();
+		realm = Realm.getDefaultInstance();
+		schedules = realm.where(Schedule.class).findAll();
 
 		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
 			loadNewScheduleFragment();
 		} else {
-			loadMainFragment(schedules.get(0));
+			loadMainFragment(schedules.first());
 		}
 
 		// set up nav drawer
@@ -99,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void loadMainFragment(Schedule schedule) {
+		// update side drawer
 		if (navigationAdapter != null) {
 			int position = schedules.indexOf(schedule);
 			navigationAdapter.setCurrentPosition(position);
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		}
 		loadedSchedule = schedule;
 		drawerLayout.closeDrawers();
+		// load new fragment
 		mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
 		if (mainFragment != null) {
 			fragmentManager
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		}
 		mainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
-		bundle.putLong(TAG_SCHEDULE_ID, schedule.getId());
+		bundle.putString(TAG_SCHEDULE_ID, schedule.getId());
 		mainFragment.setArguments(bundle);
 		fragmentManager
 				.beginTransaction()
@@ -141,15 +141,15 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	@Override
-	public void onScheduleCreated(Schedule schedule) {
+	public void onScheduleCreated() {
 		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		schedules.add(schedule);
+		Schedule schedule = realm.where(Schedule.class).findAll().last();
 		loadMainFragment(schedule);
 	}
 
 	@Override
-	public void onItemChecked(ArrayList<StudyItem> studyItems) {
-		mainFragment.saveDay();
+	public void onItemChecked() {
+		mainFragment.updateDay();
 	}
 
 	@Override
@@ -179,14 +179,21 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	private void deleteSchedule() {
 		final Snackbar snackbar = Snackbar.make(findViewById(R.id.fragmentPlaceHolder), "Delete " + loadedSchedule.getLanguage() + "?\n(Can't be undone!)", Snackbar.LENGTH_INDEFINITE);
 		snackbar.setAction("Delete", view -> {
-			sqlManager.deleteSchedule(loadedSchedule);
+			// find array index of the currently loaded schedule
 			int position = schedules.indexOf(loadedSchedule);
-			schedules.remove(loadedSchedule);
+
+			// delete the schedule
+			realm.executeTransaction(r -> {
+				schedules.deleteFromRealm(position);
+			});
+
+			// update the side menu
 			navigationAdapter.notifyItemRemoved(position);
-			if (position > 0)
-				position--;
+
+			// load the next schedule if there's one left
+			int newPosition = position > 0 ? position - 1 : position;
 			if (schedules.size() > 0) {
-				loadMainFragment(schedules.get(position));
+				loadMainFragment(schedules.get(newPosition));
 			} else {
 				loadNewScheduleFragment();
 			}

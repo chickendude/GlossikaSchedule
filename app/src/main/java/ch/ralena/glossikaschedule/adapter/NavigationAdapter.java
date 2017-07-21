@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Schedule;
+import io.realm.RealmResults;
 
 /**
  * Created by crater-windoze on 1/3/2017.
@@ -28,10 +27,10 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 	private static final int TYPE_ADD_SCHEDULE = 2;
 	private Context mContext;
 	private OnItemClickListener mListener;
-	private ArrayList<Schedule> mSchedules;
+	private RealmResults<Schedule> mSchedules;
 	private int mCurrentPosition;
 
-	public NavigationAdapter(Context context, ArrayList<Schedule> schedules, int currentPosition) {
+	public NavigationAdapter(Context context, RealmResults<Schedule> schedules, int currentPosition) {
 		mContext = context;
 		mListener = (OnItemClickListener) context;
 		mSchedules = schedules;

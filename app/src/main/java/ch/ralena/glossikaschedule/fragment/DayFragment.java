@@ -16,28 +16,34 @@ import android.widget.TextView;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.DayAdapter;
 import ch.ralena.glossikaschedule.object.Day;
+import io.realm.Realm;
 
 public class DayFragment extends DialogFragment {
+
+	private Realm realm;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		getDialog().setCanceledOnTouchOutside(true);
 
-		// get our parameters
+		realm = Realm.getDefaultInstance();
+
+		// get day from passed in bundle
 		Bundle bundle = getArguments();
-		Day day = bundle.getParcelable(MainFragment.TAG_CURRENT_DAY);
+		String dayId = bundle.getString(MainFragment.TAG_DAY_ID);
+		Day day = realm.where(Day.class).equalTo("id", dayId).findFirst();
 
 		// inflate views
 		View view = inflater.inflate(R.layout.fragment_day, container, false);
-		TextView dayLabel = (TextView) view.findViewById(R.id.dayLabel);
-		final CheckBox checkAll = (CheckBox) view.findViewById(R.id.checkAll);
+		TextView dayLabel = view.findViewById(R.id.dayLabel);
+		final CheckBox checkAll = view.findViewById(R.id.checkAll);
 
 		// set up day title
 		dayLabel.setText("Day " + day.getDayNumber());
 
 		// set up completion date
-		LinearLayout completedDateLayout = (LinearLayout) view.findViewById(R.id.completedDateLayout);
+		LinearLayout completedDateLayout = view.findViewById(R.id.completedDateLayout);
 		if (day.getFormattedDateCompleted().equals("")) {
 			// hide layout if it hasn't been completed yet
 			completedDateLayout.setVisibility(View.GONE);
