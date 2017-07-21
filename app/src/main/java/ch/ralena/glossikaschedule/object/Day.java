@@ -24,15 +24,6 @@ public class Day extends RealmObject {
 		super();
 	}
 
-	public Day(RealmList<StudyItem> studyItems, int dayNumber) {
-		this.studyItems = studyItems;
-		this.dayNumber = dayNumber;
-		isCompleted = true;
-		for (StudyItem studyItem : studyItems) {
-			isCompleted = isCompleted & studyItem.isCompleted();
-		}
-	}
-
 	public String getId() {
 		return id;
 	}

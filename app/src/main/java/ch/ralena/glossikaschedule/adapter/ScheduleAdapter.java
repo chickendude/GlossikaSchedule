@@ -50,7 +50,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 
 		public ViewHolder(View view) {
 			super(view);
-			mDayLabel = (TextView) view.findViewById(R.id.dayLabel);
+			mDayLabel = view.findViewById(R.id.dayLabel);
 			mDayLabel.setOnClickListener(mOnClickListener);
 		}
 
