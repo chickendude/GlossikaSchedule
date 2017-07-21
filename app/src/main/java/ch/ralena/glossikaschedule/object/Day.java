@@ -5,20 +5,18 @@ import android.os.Parcelable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.Calendar;
 
 public class Day implements Parcelable {
 	ArrayList<StudyItem> studyItems;
 	int dayNumber;
 	boolean isCompleted;
-	String dateCompleted;
+	Calendar dateCompleted;
 
 	public Day(ArrayList<StudyItem> studyItems, int dayNumber) {
 		this.studyItems = studyItems;
 		this.dayNumber = dayNumber;
 		isCompleted = true;
-		dateCompleted = "";
 		for (StudyItem studyItem : studyItems) {
 			isCompleted = isCompleted & studyItem.isCompleted();
 		}
@@ -48,29 +46,41 @@ public class Day implements Parcelable {
 		isCompleted = completed;
 	}
 
-	public String getDateCompleted() {
+	public Calendar getDateCompleted() {
 		return dateCompleted;
 	}
 
-	public void updateDateCompleted() {
-		// check if all study items have been completed
-		boolean allCompleted = true;
-		for (StudyItem item : studyItems) {
-			allCompleted = allCompleted && item.isCompleted();
-		}
-		// if so, save today's date as the new completed date
-		if (allCompleted) {
+	public String getFormattedDateCompleted() {
+		if (dateCompleted != null) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy");
-			dateFormat.setTimeZone(TimeZone.getDefault());
-			dateCompleted = dateFormat.format(new Date());
+			return dateFormat.format(dateCompleted.getTimeInMillis());
+		} else {
+			return "";
 		}
 	}
 
-	public boolean completedToday() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy");
-		dateFormat.setTimeZone(TimeZone.getDefault());
-		String today = dateFormat.format(new Date());
-		return dateCompleted.equals(today);
+	public void updateDateCompleted() {
+		if (dateCompleted == null) {
+			// check if all study items have been completed
+			boolean allCompleted = true;
+			for (StudyItem item : studyItems) {
+				allCompleted = allCompleted && item.isCompleted();
+			}
+			// if so, save today's date as the new completed date
+			if (allCompleted) {
+				dateCompleted = Calendar.getInstance();
+			}
+		}
+	}
+
+	public boolean wasCompletedToday() {
+		if (dateCompleted != null) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy");
+			String today = dateFormat.format(Calendar.getInstance().getTimeInMillis());
+			return dateFormat.format(dateCompleted.getTime()).equals(today);
+		} else {
+			return false;
+		}
 	}
 
 	// parcelable implementation
@@ -78,7 +88,7 @@ public class Day implements Parcelable {
 		studyItems = in.createTypedArrayList(StudyItem.CREATOR);
 		dayNumber = in.readInt();
 		isCompleted = in.readByte() != 0;
-		dateCompleted = in.readString();
+		dateCompleted = (Calendar) in.readSerializable();
 	}
 
 	@Override
@@ -91,7 +101,7 @@ public class Day implements Parcelable {
 		parcel.writeTypedList(studyItems);
 		parcel.writeInt(dayNumber);
 		parcel.writeByte((byte) (isCompleted ? 1 : 0));
-		parcel.writeString(dateCompleted);
+		parcel.writeSerializable(dateCompleted);
 	}
 
 	public static final Creator<Day> CREATOR = new Creator<Day>() {

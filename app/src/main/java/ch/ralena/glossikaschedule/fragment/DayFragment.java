@@ -38,13 +38,13 @@ public class DayFragment extends DialogFragment {
 
 		// set up completion date
 		LinearLayout completedDateLayout = (LinearLayout) view.findViewById(R.id.completedDateLayout);
-		if (day.getDateCompleted().equals("")) {
+		if (day.getFormattedDateCompleted().equals("")) {
 			// hide layout if it hasn't been completed yet
 			completedDateLayout.setVisibility(View.GONE);
 		} else {
 			// otherwise update text to show the date it was completed
 			TextView completedDateText = (TextView) view.findViewById(R.id.completedDateText);
-			completedDateText.setText(day.getDateCompleted());
+			completedDateText.setText(day.getFormattedDateCompleted());
 		}
 
 		// set up recycler view and adapter

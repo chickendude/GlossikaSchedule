@@ -2,11 +2,11 @@ package ch.ralena.glossikaschedule.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Day;
 import io.reactivex.subjects.PublishSubject;
-
-/**
- * Created by crater-windoze on 12/27/2016.
- */
 
 public class ScheduleAdapter extends RecyclerView.Adapter {
 	ArrayList<Day> days;
@@ -50,14 +46,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
-		LinearLayout mLayout;
+		CardView mLayout;
 		TextView mDayLabel;
 		Day mDay;
 		int mPosition;
 
 		public ViewHolder(View view) {
 			super(view);
-			mLayout = (LinearLayout) view;
+			mLayout = (CardView) view;
 			mDayLabel = (TextView) view.findViewById(R.id.dayLabel);
 			mDayLabel.setOnClickListener(mOnClickListener);
 		}
@@ -67,9 +63,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 			mDayLabel.setText(day.getDayNumber()+"");
 			mDay = day;
 			if (day.isCompleted()) {
-				mLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_item_complete_background));
+				if (day.wasCompletedToday()) {
+					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+					mDayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorAccentLight));
+				} else {
+					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+				}
 			} else {
-				mLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.schedule_item_background));
+				mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 			}
 		}
 
