@@ -17,8 +17,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	RealmList<Day> days;
 	Context context;
 	PublishSubject<Day> observable = PublishSubject.create();
+	int currentPosition;
 
-	public ScheduleAdapter(RealmList<Day> days, Context context) {
+	public ScheduleAdapter(int currentPosition, RealmList<Day> days, Context context) {
+		this.currentPosition = currentPosition;
 		this.days = days;
 		this.context = context;
 	}
@@ -51,15 +53,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		public ViewHolder(View view) {
 			super(view);
 			dayLabel = view.findViewById(R.id.dayLabel);
-			dayLabel.setOnClickListener(mOnClickListener);
+			dayLabel.setOnClickListener(onClickListener);
 		}
 
 		public void bindView(Day day, int position) {
 			this.position = position;
 			dayLabel.setText(day.getDayNumber()+"");
 			this.day = day;
-			dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 			if (day.isCompleted()) {
+				dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 				if (day.wasCompletedToday()) {
 					dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
 				} else {
@@ -69,11 +71,20 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 				dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
 				dayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
 			}
+
+			if (position == currentPosition) {
+				dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+				dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+			}
+
 		}
 
-		View.OnClickListener mOnClickListener = new View.OnClickListener() {
+		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				notifyItemChanged(currentPosition);
+				currentPosition = position;
+				notifyItemChanged(currentPosition);
 				observable.onNext(day);
 			}
 		};

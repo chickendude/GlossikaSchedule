@@ -60,8 +60,11 @@ public class MainFragment extends Fragment {
 		// load views
 		rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+		// skip over all days that have already been completed
+		findNextIncompleteDay();
+
 		// set up adapter and subscribe to clicks on a day
-		adapter = new ScheduleAdapter(schedule.getSchedule(), getContext());
+		adapter = new ScheduleAdapter(schedule.getSchedule().indexOf(currentDay), schedule.getSchedule(), getContext());
 		adapter.asObservable().subscribe(this::showDay);
 
 		// set up recycler view
@@ -69,9 +72,6 @@ public class MainFragment extends Fragment {
 		recyclerView.setAdapter(adapter);
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
 		recyclerView.setLayoutManager(layoutManager);
-
-		// skip over all days that have already been completed
-		findNextIncompleteDay();
 
 		return rootView;
 	}
