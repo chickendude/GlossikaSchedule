@@ -73,7 +73,7 @@ public class MainFragment extends Fragment {
 		recyclerView.setAdapter(adapter);
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
 		recyclerView.setLayoutManager(layoutManager);
-		recyclerView.scrollToPosition(currentDayPosition);
+		recyclerView.smoothScrollToPosition(currentDayPosition);
 
 		return rootView;
 	}
