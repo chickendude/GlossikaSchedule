@@ -56,6 +56,10 @@ public class Day extends RealmObject {
 		isCompleted = completed;
 	}
 
+	public void setDateCompleted(long dateCompleted) {
+		this.dateCompleted = dateCompleted;
+	}
+
 	public long getDateCompleted() {
 		return dateCompleted;
 	}
