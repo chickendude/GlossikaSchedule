@@ -38,6 +38,8 @@ public class MainFragment extends Fragment {
 
 	Realm realm;
 
+	DayFragment dayFragment;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,6 +90,14 @@ public class MainFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (dayFragment != null) {
+			dayFragment.dismiss();
+		}
+	}
+
 	// loads a dialog fragment with checkboxes for the recordings you need to study for that day
 	public void showDay(Day day) {
 		currentDay = day;
@@ -105,7 +115,7 @@ public class MainFragment extends Fragment {
 	// creates the dialog fragment with the day's files
 	private void openDayDialog() {
 		if (getFragmentManager() != null) {
-			DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
+			dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
 			if (dayFragment == null) {
 				dayFragment = new DayFragment();
 				dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);

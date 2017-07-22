@@ -24,17 +24,15 @@ import ch.ralena.glossikaschedule.sql.SqlHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-// TODO: 12/30/2016 mark currently selected study day
+// TODO: mark currently selected study day
 public class MainActivity extends AppCompatActivity implements NewScheduleFragment.OnScheduleCreatedListener, DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
 	private static final String NEW_SCHEDULE_FRAGMENT_TAG = "new_schedule_fragment";
-	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String TAG_SCHEDULE_ID = "schedule_id";
 
 	DrawerLayout drawerLayout;
-	MainFragment mainFragment;
-	NewScheduleFragment newScheduleFragment;
 	private FragmentManager fragmentManager;
 	NavigationAdapter navigationAdapter;
 	ActionBarDrawerToggle drawerToggle;
@@ -110,14 +108,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		loadedSchedule = schedule;
 		drawerLayout.closeDrawers();
 		// load new fragment
-		mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
-		if (mainFragment != null) {
-			fragmentManager
-					.beginTransaction()
-					.remove(mainFragment)
-					.commit();
-		}
-		mainFragment = new MainFragment();
+		MainFragment mainFragment = new MainFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString(TAG_SCHEDULE_ID, schedule.getId());
 		mainFragment.setArguments(bundle);
@@ -128,15 +119,18 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	}
 
 	private void loadNewScheduleFragment() {
+		// close side drawer
 		drawerLayout.closeDrawers();
-		mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
-		newScheduleFragment = (NewScheduleFragment) fragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
+		NewScheduleFragment newScheduleFragment = (NewScheduleFragment) fragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
 		if (newScheduleFragment == null) {
 			newScheduleFragment = new NewScheduleFragment();
 		}
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
+		// if this is the first time opening the app, there won't be any schedules so mainFragment won't have been created
+		// therefore we shouldn't add the schedule fragment to the backstack
 		if (mainFragment != null) {
 			fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
 		}
@@ -153,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 	@Override
 	public void onItemChecked() {
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
 		mainFragment.updateDay();
 	}
 
