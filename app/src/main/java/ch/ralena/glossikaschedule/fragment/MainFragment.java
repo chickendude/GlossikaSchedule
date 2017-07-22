@@ -210,4 +210,9 @@ public class MainFragment extends Fragment {
 			adapter.notifyItemChanged(position);
 		}
 	}
+
+	public void removeHighlight() {
+		adapter.removeHighlight();
+	}
+
 }

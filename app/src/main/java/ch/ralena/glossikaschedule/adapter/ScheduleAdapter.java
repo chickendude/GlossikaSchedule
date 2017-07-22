@@ -45,6 +45,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		return observable;
 	}
 
+	public void removeHighlight() {
+		int position = currentPosition;
+		currentPosition = -1;
+		notifyItemChanged(position);
+	}
+
 	private class ViewHolder extends RecyclerView.ViewHolder {
 		TextView dayLabel;
 		Day day;

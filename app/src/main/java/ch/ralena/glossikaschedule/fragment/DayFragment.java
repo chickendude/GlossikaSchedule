@@ -1,5 +1,6 @@
 package ch.ralena.glossikaschedule.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.DayAdapter;
 import ch.ralena.glossikaschedule.object.Day;
 import io.realm.Realm;
+
+import static ch.ralena.glossikaschedule.MainActivity.MAIN_FRAGMENT_TAG;
 
 public class DayFragment extends DialogFragment {
 	private Realm realm;
@@ -78,5 +81,12 @@ public class DayFragment extends DialogFragment {
 		});
 
 		return view;
+	}
+
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		super.onDismiss(dialog);
+		MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
+		mainFragment.removeHighlight();
 	}
 }
