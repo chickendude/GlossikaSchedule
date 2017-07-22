@@ -19,7 +19,6 @@ import ch.ralena.glossikaschedule.object.Day;
 import io.realm.Realm;
 
 public class DayFragment extends DialogFragment {
-
 	private Realm realm;
 
 	@Nullable
@@ -48,11 +47,11 @@ public class DayFragment extends DialogFragment {
 			// hide layout if it hasn't been completed yet
 			completedDateLayout.setVisibility(View.GONE);
 		} else {
-			TextView completedDateText = (TextView) view.findViewById(R.id.completedDateText);
+			TextView completedDateText = view.findViewById(R.id.completedDateText);
 			// if date completed = 1, it was converted over from an older version
 			// before we kept track of completion date
 			if (day.getDateCompleted() == 1) {
-				completedDateText.setText("unknown");
+				completedDateText.setText("---");
 			} else {
 				// otherwise update text to show the date it was completed
 				completedDateText.setText(day.getFormattedDateCompleted());

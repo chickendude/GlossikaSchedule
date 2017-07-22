@@ -21,10 +21,10 @@ import ch.ralena.glossikaschedule.object.StudyItem;
 import io.realm.Realm;
 import io.realm.RealmList;
 
+// TODO: Long press with popup menu to ask to fill in all previous days
 public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String TAG_DAY_ID = "tag_day_id";
-	//	private static final String TAG_DIALOG_OPEN = "tag_dialog_open";
 	private static final String DAY_FRAGMENT_TAG = "day_fragment";
 	private static final String TAG_ARE_EMPTY = "tag_are_empty";
 
@@ -104,14 +104,16 @@ public class MainFragment extends Fragment {
 
 	// creates the dialog fragment with the day's files
 	private void openDayDialog() {
-		DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
-		if (dayFragment == null) {
-			dayFragment = new DayFragment();
-			dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
-			Bundle bundle = new Bundle();
-			bundle.putString(TAG_DAY_ID, currentDay.getId());
-			dayFragment.setArguments(bundle);
-			dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
+		if (getFragmentManager() != null) {
+			DayFragment dayFragment = (DayFragment) getFragmentManager().findFragmentByTag(DAY_FRAGMENT_TAG);
+			if (dayFragment == null) {
+				dayFragment = new DayFragment();
+				dayFragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.dialog);
+				Bundle bundle = new Bundle();
+				bundle.putString(TAG_DAY_ID, currentDay.getId());
+				dayFragment.setArguments(bundle);
+				dayFragment.show(getFragmentManager(), DAY_FRAGMENT_TAG);
+			}
 		}
 	}
 

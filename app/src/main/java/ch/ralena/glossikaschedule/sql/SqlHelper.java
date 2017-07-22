@@ -102,8 +102,12 @@ public class SqlHelper extends SQLiteOpenHelper {
 						day.setDateCompleted(1);
 					}
 				}
-			});
 
-		}
-	}
+				// drop all tables
+				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS SCHEDULE");
+				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS DAY");
+				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS STUDY_ITEM");
+			}); // realm transaction
+		} // if oldversion < 2
+	} // onUpgrade
 }
