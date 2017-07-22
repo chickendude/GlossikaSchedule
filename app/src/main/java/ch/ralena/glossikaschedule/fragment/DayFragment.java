@@ -85,8 +85,8 @@ public class DayFragment extends DialogFragment {
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-		super.onDismiss(dialog);
 		MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
 		mainFragment.removeHighlight();
+		super.onDismiss(dialog);
 	}
 }

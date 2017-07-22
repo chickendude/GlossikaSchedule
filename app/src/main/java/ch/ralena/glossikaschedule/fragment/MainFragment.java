@@ -108,7 +108,12 @@ public class MainFragment extends Fragment {
 				openDayDialog();
 			}
 		} else {
-			snackbar.setText(String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()));
+			if (areEmptyDays()) {
+				snackbar.setText(String.format(getString(R.string.mark_days_as_complete), currentDay.getDayNumber()));
+			} else {
+				snackbar.dismiss();
+				openDayDialog();
+			}
 		}
 	}
 
