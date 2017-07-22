@@ -13,10 +13,6 @@ import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.RealmResults;
 
-/**
- * Created by crater-windoze on 1/3/2017.
- */
-
 public class NavigationAdapter extends RecyclerView.Adapter {
 	public interface OnItemClickListener {
 		void onNewSchedule();
@@ -25,24 +21,24 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 
 	private static final int TYPE_LANGUAGE = 1;
 	private static final int TYPE_ADD_SCHEDULE = 2;
-	private Context mContext;
-	private OnItemClickListener mListener;
-	private RealmResults<Schedule> mSchedules;
-	private int mCurrentPosition;
+	private Context context;
+	private OnItemClickListener listener;
+	private RealmResults<Schedule> schedules;
+	private int currentPosition;
 
 	public NavigationAdapter(Context context, RealmResults<Schedule> schedules, int currentPosition) {
-		mContext = context;
-		mListener = (OnItemClickListener) context;
-		mSchedules = schedules;
-		mCurrentPosition = currentPosition;
+		this.context = context;
+		listener = (OnItemClickListener) context;
+		this.schedules = schedules;
+		this.currentPosition = currentPosition;
 	}
 
 	public void setCurrentPosition(int currentPosition) {
-		mCurrentPosition = currentPosition;
+		this.currentPosition = currentPosition;
 	}
 
 	public int getCurrentPosition() {
-		return mCurrentPosition;
+		return currentPosition;
 	}
 
 	@Override
@@ -60,12 +56,12 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (position < getItemCount() - 1)
-			((ViewHolder) holder).bindView(mSchedules.get(position), position);
+			((ViewHolder) holder).bindView(schedules.get(position), position);
 	}
 
 	@Override
 	public int getItemCount() {
-		return mSchedules.size() + 1;
+		return schedules.size() + 1;
 	}
 
 	@Override
@@ -78,19 +74,19 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
-		private View mView;
-		private TextView mLanguageName;
-		private TextView mScheduleType;
-		private ImageView mFlagImage;
-		private Schedule mSchedule;
+		private View view;
+		private TextView languageName;
+		private TextView scheduleType;
+		private ImageView flagImage;
+		private Schedule schedule;
 
 		public ViewHolder(View view) {
 			super(view);
-			mView = view;
-			mLanguageName = (TextView) view.findViewById(R.id.languageLabel);
-			mScheduleType = (TextView) view.findViewById(R.id.scheduleTypeLabel);
-			mFlagImage = (ImageView) view.findViewById(R.id.flagImageView);
-			mView.setOnClickListener(new View.OnClickListener() {
+			this.view = view;
+			languageName = (TextView) view.findViewById(R.id.languageLabel);
+			scheduleType = (TextView) view.findViewById(R.id.scheduleTypeLabel);
+			flagImage = (ImageView) view.findViewById(R.id.flagImageView);
+			this.view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					ViewGroup parent = (ViewGroup) view.getParent();
@@ -98,23 +94,23 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 					for (int i = 0; i < numViews; i++) {
 						parent.getChildAt(i).setBackgroundResource(R.drawable.menu_language);
 					}
-					mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
-					mListener.onScheduleClicked(mSchedule);
+					ViewHolder.this.view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+					listener.onScheduleClicked(schedule);
 				}
 			});
 		}
 
 		public void bindView(Schedule schedule, int position) {
-			mSchedule = schedule;
+			this.schedule = schedule;
 			// highlight currently selected menu item
-			if (mCurrentPosition == position) {
-				mView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
+			if (currentPosition == position) {
+				view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 			} else {
-				mView.setBackgroundResource(R.drawable.menu_language);
+				view.setBackgroundResource(R.drawable.menu_language);
 			}
-			mLanguageName.setText(schedule.getLanguage());
-			mScheduleType.setText(schedule.getTitle());
-			mFlagImage.setImageResource(schedule.getLanguageType().getDrawable());
+			languageName.setText(schedule.getLanguage());
+			scheduleType.setText(schedule.getTitle());
+			flagImage.setImageResource(schedule.getLanguageType().getDrawable());
 		}
 	}
 
@@ -124,7 +120,7 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 			itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					mListener.onNewSchedule();
+					listener.onNewSchedule();
 				}
 			});
 		}

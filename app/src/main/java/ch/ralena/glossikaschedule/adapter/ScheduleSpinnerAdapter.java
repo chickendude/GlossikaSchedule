@@ -14,13 +14,13 @@ import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.ScheduleType;
 
 public class ScheduleSpinnerAdapter extends ArrayAdapter<ScheduleType> {
-	List<ScheduleType> mScheduleTypes;
-	LayoutInflater mInflater;
+	List<ScheduleType> scheduleTypes;
+	LayoutInflater inflater;
 
 	public ScheduleSpinnerAdapter(Context context, int resource, List<ScheduleType> scheduleTypes) {
 		super(context, resource, scheduleTypes);
-		mScheduleTypes = scheduleTypes;
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.scheduleTypes = scheduleTypes;
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@NonNull
@@ -35,12 +35,12 @@ public class ScheduleSpinnerAdapter extends ArrayAdapter<ScheduleType> {
 	}
 
 	private View createView(int position, View convertView, ViewGroup parent) {
-		ScheduleType scheduleType = mScheduleTypes.get(position);
-		View view = mInflater.inflate(R.layout.item_schedule_spinner, parent, false);
-		TextView title = (TextView) view.findViewById(R.id.titleLabel);
-		TextView summary = (TextView) view.findViewById(R.id.summaryLabel);
-		TextView minutesDay = (TextView) view.findViewById(R.id.minutesDayLabel);
-		TextView totalReps = (TextView) view.findViewById(R.id.repsLabel);
+		ScheduleType scheduleType = scheduleTypes.get(position);
+		View view = inflater.inflate(R.layout.item_schedule_spinner, parent, false);
+		TextView title = view.findViewById(R.id.titleLabel);
+		TextView summary = view.findViewById(R.id.summaryLabel);
+		TextView minutesDay = view.findViewById(R.id.minutesDayLabel);
+		TextView totalReps = view.findViewById(R.id.repsLabel);
 
 		title.setText(scheduleType.getTitle());
 		summary.setText(scheduleType.getSummary());

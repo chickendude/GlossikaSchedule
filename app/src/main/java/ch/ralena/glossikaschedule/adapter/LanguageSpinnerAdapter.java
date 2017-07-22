@@ -14,18 +14,14 @@ import java.util.List;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.LanguageType;
 
-/**
- * Created by crater-windoze on 12/31/2016.
- */
-
 public class LanguageSpinnerAdapter extends ArrayAdapter<LanguageType> {
-	List<LanguageType> mLanguages;
-	LayoutInflater mInflater;
+	List<LanguageType> languages;
+	LayoutInflater inflater;
 
 	public LanguageSpinnerAdapter(Context context, int resource, List<LanguageType> languages) {
 		super(context, resource, languages);
-		mLanguages = languages;
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.languages = languages;
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@NonNull
@@ -39,14 +35,17 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<LanguageType> {
 		return createView(position, convertView, parent);
 	}
 
-
-
 	private View createView(int position, View convertView, ViewGroup parent) {
-		LanguageType languageType = mLanguages.get(position);
-		View view = mInflater.inflate(R.layout.item_language_spinner, parent, false);
-		TextView languageName = (TextView) view.findViewById(R.id.languageLabel);
+		// language type is an object with the language's name and flag drawable
+		LanguageType languageType = languages.get(position);
+		View view = inflater.inflate(R.layout.item_language_spinner, parent, false);
+
+		// update language name
+		TextView languageName = view.findViewById(R.id.languageLabel);
 		languageName.setText(languageType.getName());
-		ImageView flag = (ImageView) view.findViewById(R.id.flagImageView);
+
+		// update flag
+		ImageView flag = view.findViewById(R.id.flagImageView);
 		flag.setImageResource(languageType.getDrawable());
 		return view;
 	}

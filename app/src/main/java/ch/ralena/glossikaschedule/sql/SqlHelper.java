@@ -28,6 +28,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+		// convert sql database into realm database
 		if (oldVersion < 2) {
 			Realm realm = Realm.getDefaultInstance();
 			realm.executeTransaction(r -> {

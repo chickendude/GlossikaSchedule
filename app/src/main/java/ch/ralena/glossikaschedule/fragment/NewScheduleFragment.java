@@ -20,27 +20,23 @@ import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.data.ScheduleData;
 import io.realm.Realm;
 
-/**
- * Created by crater-windoze on 12/30/2016.
- */
-
 public class NewScheduleFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
 	public interface OnScheduleCreatedListener {
 		void onScheduleCreated();
 	}
 
-	private Spinner mScheduleSpinner;
-	private Spinner mLanguageSpinner;
-	private int mScheduleType;
-	private LanguageType mLanguageType;
-	private OnScheduleCreatedListener mListener;
+	private Spinner scheduleSpinner;
+	private Spinner languageSpinner;
+	private int scheduleType;
+	private LanguageType languageType;
+	private OnScheduleCreatedListener listener;
 	private Realm realm;
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		mListener = (OnScheduleCreatedListener) context;
+		listener = (OnScheduleCreatedListener) context;
 	}
 
 	@Nullable
@@ -51,19 +47,19 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 		realm = Realm.getDefaultInstance();
 
 		View view = inflater.inflate(R.layout.fragment_new_schedule, container, false);
-		mScheduleSpinner = (Spinner) view.findViewById(R.id.scheduleSpinner);
+		scheduleSpinner = view.findViewById(R.id.scheduleSpinner);
 		ScheduleSpinnerAdapter scheduleSpinnerAdapter = new ScheduleSpinnerAdapter(getActivity(), R.layout.item_schedule_spinner, ScheduleData.getScheduleTypes());
-		mScheduleSpinner.setAdapter(scheduleSpinnerAdapter);
-		mScheduleSpinner.setOnItemSelectedListener(this);
+		scheduleSpinner.setAdapter(scheduleSpinnerAdapter);
+		scheduleSpinner.setOnItemSelectedListener(this);
 
-		mLanguageSpinner = (Spinner) view.findViewById(R.id.languageSpinner);
+		languageSpinner = view.findViewById(R.id.languageSpinner);
 		LanguageSpinnerAdapter languageSpinnerAdapter = new LanguageSpinnerAdapter(getActivity(), R.layout.item_language_spinner, LanguageData.Languages);
-		mLanguageSpinner.setAdapter(languageSpinnerAdapter);
+		languageSpinner.setAdapter(languageSpinnerAdapter);
 
-		mLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-				mLanguageType = (LanguageType) adapterView.getItemAtPosition(position);
+				languageType = (LanguageType) adapterView.getItemAtPosition(position);
 			}
 
 			@Override
@@ -72,17 +68,17 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 			}
 		});
 
-		Button button = (Button) view.findViewById(R.id.createScheduleButton);
+		Button button = view.findViewById(R.id.createScheduleButton);
 		button.setOnClickListener(v -> {
-			ScheduleData.createSchedule(realm, mScheduleType, mLanguageType.getName());
-			mListener.onScheduleCreated();
+			ScheduleData.createSchedule(realm, scheduleType, languageType.getName());
+			listener.onScheduleCreated();
 		});
 		return view;
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-		mScheduleType = position;
+		scheduleType = position;
 	}
 
 	@Override

@@ -44,37 +44,37 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
-		TextView mDayLabel;
-		Day mDay;
-		int mPosition;
+		TextView dayLabel;
+		Day day;
+		int position;
 
 		public ViewHolder(View view) {
 			super(view);
-			mDayLabel = view.findViewById(R.id.dayLabel);
-			mDayLabel.setOnClickListener(mOnClickListener);
+			dayLabel = view.findViewById(R.id.dayLabel);
+			dayLabel.setOnClickListener(mOnClickListener);
 		}
 
 		public void bindView(Day day, int position) {
-			mPosition = position;
-			mDayLabel.setText(day.getDayNumber()+"");
-			mDay = day;
-			mDayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+			this.position = position;
+			dayLabel.setText(day.getDayNumber()+"");
+			this.day = day;
+			dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 			if (day.isCompleted()) {
 				if (day.wasCompletedToday()) {
-					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+					dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
 				} else {
-					mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+					dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 				}
 			} else {
-				mDayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
-				mDayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
+				dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
+				dayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
 			}
 		}
 
 		View.OnClickListener mOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				observable.onNext(mDay);
+				observable.onNext(day);
 			}
 		};
 	}

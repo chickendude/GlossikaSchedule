@@ -1,31 +1,27 @@
 package ch.ralena.glossikaschedule.data;
 
-/**
- * Created by crater-windoze on 12/31/2016.
- */
-
 public class LanguageType {
-	String mName;
-	int mDrawable;
+	String name;
+	int drawable;
 
 	public LanguageType(String name, int drawable) {
-		mName = name;
-		mDrawable = drawable;
+		this.name = name;
+		this.drawable = drawable;
 	}
 
 	public String getName() {
-		return mName;
+		return name;
 	}
 
 	public void setName(String name) {
-		mName = name;
+		this.name = name;
 	}
 
 	public int getDrawable() {
-		return mDrawable;
+		return drawable;
 	}
 
 	public void setDrawable(int drawable) {
-		mDrawable = drawable;
+		this.drawable = drawable;
 	}
 }
