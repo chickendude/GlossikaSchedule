@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 		setContentView(R.layout.activity_main);
 
 		// run sqlhelper to hopefully convert sqlite db to realm db
-		new SqlHelper(this);
+		new SqlHelper(this).getWritableDatabase();
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
