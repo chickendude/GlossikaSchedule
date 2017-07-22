@@ -30,78 +30,79 @@ public class SqlHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		if (oldVersion < 2) {
 			Realm realm = Realm.getDefaultInstance();
+			realm.executeTransaction(r -> {
+				HashMap<Long, Schedule> scheduleMap = new HashMap<>();
+				HashMap<Long, Day> dayMap = new HashMap<>();
 
-			HashMap<Long, Schedule> scheduleMap = new HashMap<>();
-			HashMap<Long, Day> dayMap = new HashMap<>();
-
-			// get all schedules
-			String scheduleQuery = "SELECT * FROM SCHEDULE";
-			Cursor scheduleCursor = sqLiteDatabase.rawQuery(scheduleQuery, null);
-			while (scheduleCursor.moveToNext()) {
-				Schedule schedule = realm.createObject(Schedule.class, UUID.randomUUID().toString());
-				long id = scheduleCursor.getLong(scheduleCursor.getColumnIndex(BaseColumns._ID));
-				String title = scheduleCursor.getString(scheduleCursor.getColumnIndex("TITLE"));
-				String language = scheduleCursor.getString(scheduleCursor.getColumnIndex("LANGUAGE"));
-				schedule.setTitle(title);
-				schedule.setLanguage(language);
-				scheduleMap.put(id, schedule);
-			}
-			scheduleCursor.close();
-
-			// get all days
-			String dayQuery = "SELECT * FROM DAY";
-			Cursor dayCursor = sqLiteDatabase.rawQuery(dayQuery, null);
-			while (dayCursor.moveToNext()) {
-				Day day = realm.createObject(Day.class, UUID.randomUUID().toString());
-				long id = dayCursor.getLong(dayCursor.getColumnIndex(BaseColumns._ID));
-				long scheduleId = dayCursor.getLong(dayCursor.getColumnIndex("SCHEDULE_ID"));
-				int dayNumber = dayCursor.getInt(dayCursor.getColumnIndex("DAY"));
-				day.setDayNumber(dayNumber);
-
-				// add day to mapping of days
-				dayMap.put(id, day);
-
-				// add day to its corresponding schedule
-				Schedule schedule = scheduleMap.get(scheduleId);
-				schedule.getSchedule().add(day);
-			}
-			dayCursor.close();
-
-			// get all study items
-			String studyItemQuery = "SELECT * FROM STUDY_ITEM";
-			Cursor studyItemCursor = sqLiteDatabase.rawQuery(studyItemQuery, null);
-			while (studyItemCursor.moveToNext()) {
-				// create realm object
-				StudyItem studyItem = realm.createObject(StudyItem.class, UUID.randomUUID().toString());
-
-				// pull data from database
-				long id = studyItemCursor.getLong(studyItemCursor.getColumnIndex(BaseColumns._ID));
-				long dayId = studyItemCursor.getLong(studyItemCursor.getColumnIndex("DAY_ID"));
-				String description = studyItemCursor.getString(studyItemCursor.getColumnIndex("DESCRIPTION"));
-				boolean isCompleted = studyItemCursor.getInt(studyItemCursor.getColumnIndex("COMPLETED")) > 0;
-
-				// update study item with db data
-				studyItem.setTitle(description);
-				studyItem.setCompleted(isCompleted);
-
-				// add study item to the corresponding day
-				Day day = dayMap.get(dayId);
-				day.getStudyItems().add(studyItem);
-			}
-			studyItemCursor.close();
-
-			// go through study items for each day and check if they've been completed so we can set iscompleted/datecompleted
-			for (Day day : dayMap.values()) {
-				boolean isCompleted = true;
-				for (StudyItem studyItem : day.getStudyItems()) {
-					isCompleted &= studyItem.isCompleted();
+				// get all schedules
+				String scheduleQuery = "SELECT * FROM SCHEDULE";
+				Cursor scheduleCursor = sqLiteDatabase.rawQuery(scheduleQuery, null);
+				while (scheduleCursor.moveToNext()) {
+					Schedule schedule = r.createObject(Schedule.class, UUID.randomUUID().toString());
+					long id = scheduleCursor.getLong(scheduleCursor.getColumnIndex(BaseColumns._ID));
+					String title = scheduleCursor.getString(scheduleCursor.getColumnIndex("TITLE"));
+					String language = scheduleCursor.getString(scheduleCursor.getColumnIndex("LANGUAGE"));
+					schedule.setTitle(title);
+					schedule.setLanguage(language);
+					scheduleMap.put(id, schedule);
 				}
-				day.setCompleted(isCompleted);
-				if (isCompleted) {
-					// set to one to show that it was from a previous version
-					day.setDateCompleted(1);
+				scheduleCursor.close();
+
+				// get all days
+				String dayQuery = "SELECT * FROM DAY";
+				Cursor dayCursor = sqLiteDatabase.rawQuery(dayQuery, null);
+				while (dayCursor.moveToNext()) {
+					Day day = realm.createObject(Day.class, UUID.randomUUID().toString());
+					long id = dayCursor.getLong(dayCursor.getColumnIndex(BaseColumns._ID));
+					long scheduleId = dayCursor.getLong(dayCursor.getColumnIndex("SCHEDULE_ID"));
+					int dayNumber = dayCursor.getInt(dayCursor.getColumnIndex("DAY"));
+					day.setDayNumber(dayNumber);
+
+					// add day to mapping of days
+					dayMap.put(id, day);
+
+					// add day to its corresponding schedule
+					Schedule schedule = scheduleMap.get(scheduleId);
+					schedule.getSchedule().add(day);
 				}
-			}
+				dayCursor.close();
+
+				// get all study items
+				String studyItemQuery = "SELECT * FROM STUDY_ITEM";
+				Cursor studyItemCursor = sqLiteDatabase.rawQuery(studyItemQuery, null);
+				while (studyItemCursor.moveToNext()) {
+					// create realm object
+					StudyItem studyItem = realm.createObject(StudyItem.class, UUID.randomUUID().toString());
+
+					// pull data from database
+					long id = studyItemCursor.getLong(studyItemCursor.getColumnIndex(BaseColumns._ID));
+					long dayId = studyItemCursor.getLong(studyItemCursor.getColumnIndex("DAY_ID"));
+					String description = studyItemCursor.getString(studyItemCursor.getColumnIndex("DESCRIPTION"));
+					boolean isCompleted = studyItemCursor.getInt(studyItemCursor.getColumnIndex("COMPLETED")) > 0;
+
+					// update study item with db data
+					studyItem.setTitle(description);
+					studyItem.setCompleted(isCompleted);
+
+					// add study item to the corresponding day
+					Day day = dayMap.get(dayId);
+					day.getStudyItems().add(studyItem);
+				}
+				studyItemCursor.close();
+
+				// go through study items for each day and check if they've been completed so we can set iscompleted/datecompleted
+				for (Day day : dayMap.values()) {
+					boolean isCompleted = true;
+					for (StudyItem studyItem : day.getStudyItems()) {
+						isCompleted &= studyItem.isCompleted();
+					}
+					day.setCompleted(isCompleted);
+					if (isCompleted) {
+						// set to one to show that it was from a previous version
+						day.setDateCompleted(1);
+					}
+				}
+			});
 
 		}
 	}
