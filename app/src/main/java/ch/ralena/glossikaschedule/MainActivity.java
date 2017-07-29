@@ -20,7 +20,6 @@ import ch.ralena.glossikaschedule.adapter.NavigationAdapter;
 import ch.ralena.glossikaschedule.fragment.MainFragment;
 import ch.ralena.glossikaschedule.fragment.NewScheduleFragment;
 import ch.ralena.glossikaschedule.object.Schedule;
-import ch.ralena.glossikaschedule.sql.SqlHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -46,9 +45,6 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		// run sqlhelper to hopefully convert sqlite db to realm db
-		new SqlHelper(this).getWritableDatabase();
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
