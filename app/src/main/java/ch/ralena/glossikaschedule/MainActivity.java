@@ -1,9 +1,9 @@
 package ch.ralena.glossikaschedule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +23,6 @@ import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-// TODO: mark currently selected study day
 public class MainActivity extends AppCompatActivity implements NewScheduleFragment.OnScheduleCreatedListener, DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
-			loadNewScheduleFragment();
+			loadNewScheduleActivity();
 		} else {
 			loadMainFragment(schedules.first());
 		}
@@ -114,24 +113,17 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 				.commit();
 	}
 
-	private void loadNewScheduleFragment() {
+	private void loadNewScheduleActivity() {
 		// close side drawer
 		drawerLayout.closeDrawers();
-		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
-		NewScheduleFragment newScheduleFragment = (NewScheduleFragment) fragmentManager.findFragmentByTag(NEW_SCHEDULE_FRAGMENT_TAG);
-		if (newScheduleFragment == null) {
-			newScheduleFragment = new NewScheduleFragment();
-		}
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.fragmentPlaceHolder, newScheduleFragment, NEW_SCHEDULE_FRAGMENT_TAG);
+		Intent intent = new Intent(this, NewScheduleActivity.class);
 		// if this is the first time opening the app, there won't be any schedules so mainFragment won't have been created
-		// therefore we shouldn't add the schedule fragment to the backstack
+		// therefore we shouldn't add the new schedule activity to the backstack
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
 		if (mainFragment != null) {
-			fragmentTransaction.addToBackStack(NEW_SCHEDULE_FRAGMENT_TAG);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		}
-		fragmentTransaction.commit();
-
+		startActivity(intent);
 	}
 
 	@Override
@@ -149,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 	@Override
 	public void onNewSchedule() {
-		loadNewScheduleFragment();
+		loadNewScheduleActivity();
 	}
 
 	@Override
@@ -190,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 			if (schedules.size() > 0) {
 				loadMainFragment(schedules.get(newPosition));
 			} else {
-				loadNewScheduleFragment();
+				loadNewScheduleActivity();
 			}
 			snackbar.dismiss();
 		});

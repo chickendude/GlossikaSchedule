@@ -6,15 +6,16 @@ import java.util.List;
 import ch.ralena.glossikaschedule.R;
 
 public class LanguageData {
-	public static List<LanguageType> Languages;
+	public static List<LanguageType> languages;
 
 	static {
-		Languages = getLanguages();
+		languages = getLanguages();
 	}
 
 	public static List<LanguageType> getLanguages() {
 		List<LanguageType> languages = new ArrayList<>();
 		languages.add(new LanguageType("Arabic (Standard)", R.drawable.flag_arabic_msa));
+		languages.add(new LanguageType("Arabic (Egyptian)", R.drawable.flag_arabic_egypt));
 		languages.add(new LanguageType("Armenian", R.drawable.flag_armenian));
 		languages.add(new LanguageType("Belarusian", R.drawable.flag_belarusian));
 		languages.add(new LanguageType("Catalan", R.drawable.flag_catalan));
@@ -26,7 +27,6 @@ public class LanguageData {
 		languages.add(new LanguageType("Chinese (Wenzhounese)", R.drawable.flag_chinese_china));
 		languages.add(new LanguageType("Czech", R.drawable.flag_czech));
 		languages.add(new LanguageType("Dutch", R.drawable.flag_dutch));
-		languages.add(new LanguageType("Egyptian Arabic", R.drawable.flag_arabic_egypt));
 		languages.add(new LanguageType("Estonian", R.drawable.flag_estonian));
 		languages.add(new LanguageType("Finnish", R.drawable.flag_finnish));
 		languages.add(new LanguageType("French", R.drawable.flag_french));

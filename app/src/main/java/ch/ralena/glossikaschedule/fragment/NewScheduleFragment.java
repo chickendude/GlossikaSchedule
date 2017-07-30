@@ -11,11 +11,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import ch.ralena.glossikaschedule.MainActivity;
 import ch.ralena.glossikaschedule.R;
-import ch.ralena.glossikaschedule.adapter.LanguageSpinnerAdapter;
 import ch.ralena.glossikaschedule.adapter.ScheduleSpinnerAdapter;
-import ch.ralena.glossikaschedule.data.LanguageData;
 import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.data.ScheduleData;
 import io.realm.Realm;
@@ -42,7 +39,7 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		((MainActivity) getActivity()).getSupportActionBar().setTitle("New Schedule");
+		getActivity().setTitle("New Schedule");
 
 		realm = Realm.getDefaultInstance();
 
@@ -52,9 +49,9 @@ public class NewScheduleFragment extends Fragment implements AdapterView.OnItemS
 		scheduleSpinner.setAdapter(scheduleSpinnerAdapter);
 		scheduleSpinner.setOnItemSelectedListener(this);
 
-		languageSpinner = view.findViewById(R.id.languageSpinner);
-		LanguageSpinnerAdapter languageSpinnerAdapter = new LanguageSpinnerAdapter(getActivity(), R.layout.item_language_spinner, LanguageData.Languages);
-		languageSpinner.setAdapter(languageSpinnerAdapter);
+//		languageSpinner = view.findViewById(R.id.languageSpinner);
+//		LanguageSelectAdapter languageSelectAdapter = new LanguageSelectAdapter(getActivity(), R.layout.item_language, LanguageData.languages);
+//		languageSpinner.setAdapter(languageSelectAdapter);
 
 		languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override

@@ -65,7 +65,7 @@ public class Schedule extends RealmObject {
 
 	public LanguageType getLanguageType() {
 		LanguageType languageType = null;
-		for (LanguageType language : LanguageData.Languages) {
+		for (LanguageType language : LanguageData.languages) {
 			if (this.language.equals(language.getName())) {
 				return language;
 			}
