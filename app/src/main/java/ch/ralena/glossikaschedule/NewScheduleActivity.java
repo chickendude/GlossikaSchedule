@@ -11,12 +11,15 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import ch.ralena.glossikaschedule.adapter.LanguageSelectAdapter;
+import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.fragment.NewScheduleFragment;
 import ch.ralena.glossikaschedule.fragment.NewScheduleLanguageFragment;
+import ch.ralena.glossikaschedule.fragment.NewScheduleScheduleFragment;
 import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.Realm;
 
-public class NewScheduleActivity extends AppCompatActivity implements NewScheduleFragment.OnScheduleCreatedListener {
+public class NewScheduleActivity extends AppCompatActivity implements LanguageSelectAdapter.OnLanguageSelectedListener, NewScheduleFragment.OnScheduleCreatedListener {
 
 	private static final String TAG = NewScheduleActivity.class.getSimpleName();
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
@@ -28,6 +31,8 @@ public class NewScheduleActivity extends AppCompatActivity implements NewSchedul
 	private ImageView[] circleIndicatorImages = new ImageView[3];
 
 	private Realm realm;
+
+	private LanguageType selectedLanguage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class NewScheduleActivity extends AppCompatActivity implements NewSchedul
 					case 0:
 						return new NewScheduleLanguageFragment();
 					case 1:
-						return new NewScheduleLanguageFragment();
+						return new NewScheduleScheduleFragment();
 					default:
 						return new NewScheduleLanguageFragment();
 				}
@@ -113,5 +118,11 @@ public class NewScheduleActivity extends AppCompatActivity implements NewSchedul
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.toolbar, menu);
 		return true;
+	}
+
+	@Override
+	public void onLanguageSelected(LanguageType language) {
+		selectedLanguage = language;
+		viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 	}
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.LanguageType;
 
-public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAdapter.LanguageViewHolder> {
+public class ScheduleSelectAdapter extends RecyclerView.Adapter<ScheduleSelectAdapter.LanguageViewHolder> {
 	public interface OnLanguageSelectedListener {
 		void onLanguageSelected(LanguageType language);
 	}
@@ -23,19 +23,19 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
 	List<LanguageType> languages;
 	LanguageType selectedLanguage;
 
-	public LanguageSelectAdapter(List<LanguageType> languages) {
+	public ScheduleSelectAdapter(List<LanguageType> languages) {
 		this.languages = languages;
 	}
 
 	@Override
-	public LanguageSelectAdapter.LanguageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ScheduleSelectAdapter.LanguageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_language, parent, false);
 		listener = (OnLanguageSelectedListener) parent.getContext();
 		return new LanguageViewHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(LanguageSelectAdapter.LanguageViewHolder holder, int position) {
+	public void onBindViewHolder(ScheduleSelectAdapter.LanguageViewHolder holder, int position) {
 		holder.bindView(languages.get(position));
 	}
 
