@@ -1,72 +1,83 @@
 package ch.ralena.glossikaschedule.adapter;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.LanguageType;
+import ch.ralena.glossikaschedule.data.ScheduleType;
 
-public class ScheduleSelectAdapter extends RecyclerView.Adapter<ScheduleSelectAdapter.LanguageViewHolder> {
-	public interface OnLanguageSelectedListener {
-		void onLanguageSelected(LanguageType language);
+public class ScheduleSelectAdapter extends RecyclerView.Adapter<ScheduleSelectAdapter.ScheduleViewHolder> {
+	public interface OnScheduleSelectedListener {
+		void onScheduleSelected(LanguageType language);
 	}
 
-	OnLanguageSelectedListener listener;
+	OnScheduleSelectedListener listener;
 
-	List<LanguageType> languages;
-	LanguageType selectedLanguage;
+	Map<Integer, List<ScheduleType>> schedules;
+	List<Integer> minutesList;
+	int currentSelection;
 
-	public ScheduleSelectAdapter(List<LanguageType> languages) {
-		this.languages = languages;
+	public ScheduleSelectAdapter(TreeMap<Integer, List<ScheduleType>> schedules) {
+		minutesList = new ArrayList<>();
+		for (Integer integer : schedules.keySet()) {
+			minutesList.add(integer);
+		}
+		this.schedules = schedules;
 	}
 
 	@Override
-	public ScheduleSelectAdapter.LanguageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_language, parent, false);
-		listener = (OnLanguageSelectedListener) parent.getContext();
-		return new LanguageViewHolder(view);
+	public ScheduleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schedule_minutes, parent, false);
+		listener = (OnScheduleSelectedListener) parent.getContext();
+		return new ScheduleViewHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(ScheduleSelectAdapter.LanguageViewHolder holder, int position) {
-		holder.bindView(languages.get(position));
+	public void onBindViewHolder(ScheduleViewHolder holder, int position) {
+		holder.bindView(position);
 	}
 
 	@Override
 	public int getItemCount() {
-		return languages.size();
+		return schedules.size();
 	}
 
-	class LanguageViewHolder extends RecyclerView.ViewHolder {
-		TextView languageName;
-		ImageView flag;
+	class ScheduleViewHolder extends RecyclerView.ViewHolder {
+		TextView minutesLabel;
 
-		LanguageViewHolder(View itemView) {
+		ScheduleViewHolder(View itemView) {
 			super(itemView);
-			languageName = itemView.findViewById(R.id.languageLabel);
-			flag = itemView.findViewById(R.id.flagImageView);
+			minutesLabel = itemView.findViewById(R.id.minutesLabel);
 		}
 
-		private void bindView(LanguageType language) {
-			if (language.equals(selectedLanguage)) {
-				itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.colorAccent));
-			} else {
-				itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), android.R.color.transparent));
-			}
+		private void bindView(int position) {
 			itemView.setOnClickListener(view -> {
-				selectedLanguage = language;
-				notifyDataSetChanged();
-				listener.onLanguageSelected(language);
+				notifyItemChanged(currentSelection);
+				notifyItemChanged(position);
+				currentSelection = position;
 			});
-			languageName.setText(language.getName());
-			flag.setImageResource(language.getDrawable());
+
+			if (position == currentSelection) {
+				itemView.setBackgroundResource(R.drawable.schedule_minutes_selected);
+			} else {
+				itemView.setBackgroundResource(R.drawable.schedule_minutes);
+			}
+
+//			itemView.setOnClickListener(view -> {
+////				selectedLanguage = schedule;
+//				notifyDataSetChanged();
+////				listener.onScheduleSelected(minutes);
+//			});
+			minutesLabel.setText(minutesList.get(position) + "");
 		}
 	}
 }

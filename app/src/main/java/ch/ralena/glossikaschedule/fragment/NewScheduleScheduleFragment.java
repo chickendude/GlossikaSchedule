@@ -9,27 +9,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 import ch.ralena.glossikaschedule.R;
-import ch.ralena.glossikaschedule.adapter.LanguageSelectAdapter;
-import ch.ralena.glossikaschedule.data.LanguageData;
-import io.realm.Realm;
+import ch.ralena.glossikaschedule.adapter.ScheduleSelectAdapter;
+import ch.ralena.glossikaschedule.data.ScheduleData;
+import ch.ralena.glossikaschedule.data.ScheduleType;
 
 public class NewScheduleScheduleFragment extends Fragment {
-	private Realm realm;
+
+	private TreeMap<Integer, List<ScheduleType>> schedules;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		getActivity().setTitle("New Schedule");
 
-		realm = Realm.getDefaultInstance();
+		// organize schedules by how many minutes they take
+		schedules = new TreeMap<>();
+		for (ScheduleType scheduleType : ScheduleData.scheduleList) {
+			schedules.putIfAbsent(scheduleType.getMinutesDay(), new ArrayList<>());
+			schedules.get(scheduleType.getMinutesDay()).add(scheduleType);
+		}
 
 		// load view
 		View view = inflater.inflate(R.layout.fragment_new_schedule_language, container, false);
 
 		RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-		LanguageSelectAdapter languageSelectAdapter = new LanguageSelectAdapter(LanguageData.languages);
-		recyclerView.setAdapter(languageSelectAdapter);
+		ScheduleSelectAdapter scheduleSelectAdapter = new ScheduleSelectAdapter(schedules);
+		recyclerView.setAdapter(scheduleSelectAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		return view;
 	}

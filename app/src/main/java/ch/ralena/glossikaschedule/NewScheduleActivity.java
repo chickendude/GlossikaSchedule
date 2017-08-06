@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import ch.ralena.glossikaschedule.adapter.LanguageSelectAdapter;
+import ch.ralena.glossikaschedule.adapter.ScheduleSelectAdapter;
 import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.fragment.NewScheduleFragment;
 import ch.ralena.glossikaschedule.fragment.NewScheduleLanguageFragment;
@@ -19,14 +20,11 @@ import ch.ralena.glossikaschedule.fragment.NewScheduleScheduleFragment;
 import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.Realm;
 
-public class NewScheduleActivity extends AppCompatActivity implements LanguageSelectAdapter.OnLanguageSelectedListener, NewScheduleFragment.OnScheduleCreatedListener {
+public class NewScheduleActivity extends AppCompatActivity implements ScheduleSelectAdapter.OnScheduleSelectedListener, LanguageSelectAdapter.OnLanguageSelectedListener, NewScheduleFragment.OnScheduleCreatedListener {
 
 	private static final String TAG = NewScheduleActivity.class.getSimpleName();
-	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
 	private static final String NEW_SCHEDULE_FRAGMENT_TAG = "new_schedule_fragment";
-	public static final String TAG_SCHEDULE_ID = "schedule_id";
 
-	private FragmentManager fragmentManager;
 	private ViewPager viewPager;
 	private ImageView[] circleIndicatorImages = new ImageView[3];
 
@@ -38,8 +36,6 @@ public class NewScheduleActivity extends AppCompatActivity implements LanguageSe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_schedule);
-
-		fragmentManager = getSupportFragmentManager();
 
 		// load schedules from database
 		realm = Realm.getDefaultInstance();
@@ -62,6 +58,7 @@ public class NewScheduleActivity extends AppCompatActivity implements LanguageSe
 
 			}
 		});
+		viewPager.setOffscreenPageLimit(2);
 		viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
 			@Override
 			public int getCount() {
@@ -124,5 +121,10 @@ public class NewScheduleActivity extends AppCompatActivity implements LanguageSe
 	public void onLanguageSelected(LanguageType language) {
 		selectedLanguage = language;
 		viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+	}
+
+	@Override
+	public void onScheduleSelected(LanguageType language) {
+
 	}
 }
