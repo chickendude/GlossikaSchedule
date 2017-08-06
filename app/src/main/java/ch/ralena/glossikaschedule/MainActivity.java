@@ -59,13 +59,12 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
-			loadNewScheduleActivity();
+			loadNewScheduleActivity(false);
 		} else {
 			loadMainFragment(schedules.first());
 		}
 
 		// set up nav drawer
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		setupNavigationDrawer();
 	}
 
@@ -113,14 +112,14 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 				.commit();
 	}
 
-	private void loadNewScheduleActivity() {
+	private void loadNewScheduleActivity(boolean addToBackStack) {
 		// close side drawer
 		drawerLayout.closeDrawers();
 		Intent intent = new Intent(this, NewScheduleActivity.class);
 		// if this is the first time opening the app, there won't be any schedules so mainFragment won't have been created
 		// therefore we shouldn't add the new schedule activity to the backstack
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
-		if (mainFragment != null) {
+		if (!addToBackStack) {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		}
 		startActivity(intent);
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 
 	@Override
 	public void onNewSchedule() {
-		loadNewScheduleActivity();
+		loadNewScheduleActivity(true);
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 			if (schedules.size() > 0) {
 				loadMainFragment(schedules.get(newPosition));
 			} else {
-				loadNewScheduleActivity();
+				loadNewScheduleActivity(false);
 			}
 			snackbar.dismiss();
 		});

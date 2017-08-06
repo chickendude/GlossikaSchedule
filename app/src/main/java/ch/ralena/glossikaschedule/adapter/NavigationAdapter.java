@@ -117,12 +117,7 @@ public class NavigationAdapter extends RecyclerView.Adapter {
 	private class ViewHolderNew extends RecyclerView.ViewHolder {
 		public ViewHolderNew(View itemView) {
 			super(itemView);
-			itemView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					listener.onNewSchedule();
-				}
-			});
+			itemView.setOnClickListener(view -> listener.onNewSchedule());
 		}
 	}
 }
