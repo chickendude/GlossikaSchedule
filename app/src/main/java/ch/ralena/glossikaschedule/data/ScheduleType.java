@@ -5,59 +5,71 @@ package ch.ralena.glossikaschedule.data;
  */
 
 public class ScheduleType {
-	private String mTitle;
-	private String[][] mSchedule;
-	private int mMinutesDay;
-	private int mTotalReps;
-	private String mSummary;
-	private String mDescription;
+	private String title;
+	private String[][] schedule;
+	private int minutesDay;
+	private int totalReps;
+	private String courseLength;
+	private String courseLengthSmall;
+	private String summary;
+	private String description;
 
-	public ScheduleType(String title, String[][] schedule, int minutesDay, int totalReps, String summary, String description) {
-		mTitle = title;
-		mSchedule = schedule;
-		mMinutesDay = minutesDay;
-		mTotalReps = totalReps;
-		mSummary = summary;
-		mDescription = description;
+	public ScheduleType(String title, String[][] schedule, int minutesDay, int totalReps, String courseLength, String courseLengthSmall, String summary, String description) {
+		this.title = title;
+		this.schedule = schedule;
+		this.minutesDay = minutesDay;
+		this.totalReps = totalReps;
+		this.courseLength = courseLength;
+		this.courseLengthSmall = courseLengthSmall;
+		this.summary = summary;
+		this.description = description;
 	}
 
 	public String getTitle() {
-		return mTitle;
+		return title;
 	}
 
 	public void setTitle(String title) {
-		mTitle = title;
+		this.title = title;
 	}
 
 	public String[][] getSchedule() {
-		return mSchedule;
+		return schedule;
 	}
 
 	public void setSchedule(String[][] schedule) {
-		mSchedule = schedule;
+		this.schedule = schedule;
 	}
 
 	public String getSummary() {
-		return mSummary;
+		return summary;
 	}
 
 	public void setSummary(String summary) {
-		mSummary = summary;
+		this.summary = summary;
 	}
 
 	public String getDescription() {
-		return mDescription;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		mDescription = description;
+		this.description = description;
 	}
 
 	public int getMinutesDay() {
-		return mMinutesDay;
+		return minutesDay;
 	}
 
 	public int getTotalReps() {
-		return mTotalReps;
+		return totalReps;
+	}
+
+	public String getCourseLength() {
+		return courseLength;
+	}
+
+	public String getCourseLengthSmall() {
+		return courseLengthSmall;
 	}
 }
