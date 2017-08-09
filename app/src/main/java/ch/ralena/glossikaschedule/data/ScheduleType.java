@@ -1,10 +1,9 @@
 package ch.ralena.glossikaschedule.data;
 
-/**
- * Created by crater-windoze on 12/30/2016.
- */
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class ScheduleType {
+public class ScheduleType implements Parcelable {
 	private String title;
 	private String[][] schedule;
 	private int minutesDay;
@@ -71,5 +70,43 @@ public class ScheduleType {
 
 	public String getCourseLengthSmall() {
 		return courseLengthSmall;
+	}
+
+	protected ScheduleType(Parcel in) {
+		title = in.readString();
+		minutesDay = in.readInt();
+		totalReps = in.readInt();
+		courseLength = in.readString();
+		courseLengthSmall = in.readString();
+		summary = in.readString();
+		description = in.readString();
+	}
+
+	public static final Creator<ScheduleType> CREATOR = new Creator<ScheduleType>() {
+		@Override
+		public ScheduleType createFromParcel(Parcel in) {
+			return new ScheduleType(in);
+		}
+
+		@Override
+		public ScheduleType[] newArray(int size) {
+			return new ScheduleType[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int i) {
+		parcel.writeString(title);
+		parcel.writeInt(minutesDay);
+		parcel.writeInt(totalReps);
+		parcel.writeString(courseLength);
+		parcel.writeString(courseLengthSmall);
+		parcel.writeString(summary);
+		parcel.writeString(description);
 	}
 }

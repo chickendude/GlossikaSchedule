@@ -12,12 +12,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import ch.ralena.glossikaschedule.R;
-import ch.ralena.glossikaschedule.data.LanguageType;
 import ch.ralena.glossikaschedule.data.ScheduleType;
 
 public class ScheduleSelectAdapter extends RecyclerView.Adapter<ScheduleSelectAdapter.ScheduleViewHolder> {
 	public interface OnScheduleSelectedListener {
-		void onScheduleSelected(LanguageType language);
+		void onScheduleSelected(ScheduleType schedule);
 	}
 
 	OnScheduleSelectedListener listener;

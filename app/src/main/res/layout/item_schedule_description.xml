@@ -6,11 +6,9 @@
 			  android:paddingBottom="5dp">
 
 	<LinearLayout
+		android:id="@+id/scheduleLayout"
 		android:layout_width="90dp"
-		android:layout_height="100dp"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentTop="true"
-		android:layout_gravity="center"
+		android:layout_height="90dp"
 		android:background="@drawable/schedule_description"
 		android:clickable="true"
 		android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -44,6 +42,7 @@
 			android:orientation="horizontal">
 
 			<TextView
+				android:id="@+id/repsLabel"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textColor="@android:color/white"
@@ -63,7 +62,7 @@
 	<TextView
 		android:id="@+id/orLabel"
 		android:layout_width="wrap_content"
-		android:layout_height="100dp"
+		android:layout_height="90dp"
 		android:gravity="center"
 		android:text=" or "/>
 </LinearLayout>

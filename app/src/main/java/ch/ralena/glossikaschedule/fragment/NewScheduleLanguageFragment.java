@@ -20,8 +20,6 @@ public class NewScheduleLanguageFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		getActivity().setTitle("New Schedule");
-
 		realm = Realm.getDefaultInstance();
 
 		// load view

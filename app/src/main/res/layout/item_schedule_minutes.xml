@@ -10,11 +10,8 @@
 		android:layout_width="80dp"
 		android:layout_height="80dp"
 		android:background="@drawable/schedule_minutes"
-		android:clickable="true"
-		android:foreground="?attr/selectableItemBackgroundBorderless"
 		android:gravity="center"
-		android:orientation="vertical"
-		android:padding="16dp">
+		android:orientation="vertical">
 
 		<TextView
 			android:id="@+id/minutesLabel"

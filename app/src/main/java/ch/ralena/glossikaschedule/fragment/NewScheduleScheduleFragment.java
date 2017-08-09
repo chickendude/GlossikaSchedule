@@ -15,11 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+import ch.ralena.glossikaschedule.NewScheduleActivity;
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.ScheduleData;
 import ch.ralena.glossikaschedule.data.ScheduleType;
 
 public class NewScheduleScheduleFragment extends Fragment {
+	private static final String TAG = NewScheduleScheduleFragment.class.getSimpleName();
+	public static final String EXTRA_SCHEDULE = "extra_schedule";
 
 	private LinearLayout circleContainer;
 	private LayoutInflater inflater;
@@ -29,8 +32,6 @@ public class NewScheduleScheduleFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		getActivity().setTitle("New Schedule");
-
 		// save inflater
 		this.inflater = inflater;
 
@@ -65,7 +66,7 @@ public class NewScheduleScheduleFragment extends Fragment {
 		lp.setMargins(0, 10, 0, 10);
 		for (Integer minutes : schedules.keySet()) {
 			// inflate view
-			View minuteCircleView = inflater.inflate(R.layout.item_schedule_minutes, null, false);
+			View minuteCircleView = inflater.inflate(R.layout.item_schedule_minutes, circleContainer, false);
 			minuteCircleView.setLayoutParams(lp);
 			// update minutes text
 			TextView minutesLabel = minuteCircleView.findViewById(R.id.minutesLabel);
@@ -83,12 +84,19 @@ public class NewScheduleScheduleFragment extends Fragment {
 	private void loadScheduleDescriptions(FlexboxLayout descriptionContainer, int minutes) {
 		int index = 0;
 		for (ScheduleType scheduleType : schedules.get(minutes)) {
-			View descriptionView = inflater.inflate(R.layout.item_schedule_description, null, false);
+			View descriptionView = inflater.inflate(R.layout.item_schedule_description, descriptionContainer, false);
+			// set up onclick listener
+			LinearLayout scheduleLayout = descriptionView.findViewById(R.id.scheduleLayout);
+			scheduleLayout.setOnClickListener(view -> {
+				loadScheduleDetails(scheduleType);
+			});
 			// update textviews
 			TextView monthsLabel = descriptionView.findViewById(R.id.bigLengthLabel);
 			TextView weeksLabel = descriptionView.findViewById(R.id.smallLengthLabel);
+			TextView repsLabel = descriptionView.findViewById(R.id.repsLabel);
 			monthsLabel.setText(scheduleType.getCourseLength());
 			weeksLabel.setText(scheduleType.getCourseLengthSmall());
+			repsLabel.setText(String.format("%,d", scheduleType.getTotalReps()));
 			// if it's the last one, don't show the "or"
 			if (++index == schedules.get(minutes).size()) {
 				TextView orLabel = descriptionView.findViewById(R.id.orLabel);
@@ -97,5 +105,18 @@ public class NewScheduleScheduleFragment extends Fragment {
 			// add view to container
 			descriptionContainer.addView(descriptionView);
 		}
+	}
+
+	private void loadScheduleDetails(ScheduleType scheduleType) {
+		((NewScheduleActivity)getActivity()).updateScheduleSelected(scheduleType);
+		NewScheduleViewScheduleFragment fragment = new NewScheduleViewScheduleFragment();
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(EXTRA_SCHEDULE, scheduleType);
+		fragment.setArguments(bundle);
+
+		getFragmentManager().beginTransaction()
+				.addToBackStack(null)
+				.replace(R.id.scheduleFragmentContainer, fragment)
+				.commit();
 	}
 }
