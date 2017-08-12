@@ -114,7 +114,7 @@ public class NewScheduleScheduleFragment extends Fragment {
 		fragment.setArguments(bundle);
 
 		getFragmentManager().beginTransaction()
-				.replace(R.id.scheduleFragmentContainer, fragment)
+				.replace(R.id.fragmentContainer, fragment)
 				.addToBackStack(null)
 				.commit();
 	}
