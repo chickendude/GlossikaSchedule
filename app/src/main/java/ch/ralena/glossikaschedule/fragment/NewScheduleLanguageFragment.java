@@ -33,7 +33,6 @@ public class NewScheduleLanguageFragment extends Fragment {
 		actionBar.setTitle("Which language are you studying?");
 		actionBar.setDisplayHomeAsUpEnabled(false);
 
-
 		// load view
 		View view = inflater.inflate(R.layout.fragment_new_schedule_language, container, false);
 

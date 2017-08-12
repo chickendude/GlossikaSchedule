@@ -108,15 +108,14 @@ public class NewScheduleScheduleFragment extends Fragment {
 	}
 
 	private void loadScheduleDetails(ScheduleType scheduleType) {
-		((NewScheduleActivity)getActivity()).updateScheduleSelected(scheduleType);
 		NewScheduleViewScheduleFragment fragment = new NewScheduleViewScheduleFragment();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(EXTRA_SCHEDULE, scheduleType);
 		fragment.setArguments(bundle);
 
 		getFragmentManager().beginTransaction()
-				.addToBackStack(null)
 				.replace(R.id.scheduleFragmentContainer, fragment)
+				.addToBackStack(null)
 				.commit();
 	}
 }

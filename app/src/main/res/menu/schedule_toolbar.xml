@@ -3,16 +3,9 @@
 	  xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/action_next"
-		android:icon="@drawable/ic_next"
-		android:title="Next"
-		android:visible="false"
-		app:showAsAction="always"/>
-
-	<item
 		android:id="@+id/action_confirm"
 		android:icon="@drawable/ic_confirm"
 		android:title="Next"
-		android:visible="false"
+		android:visible="true"
 		app:showAsAction="always"/>
 </menu>
