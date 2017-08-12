@@ -60,6 +60,10 @@ public class ScheduleType implements Parcelable {
 		return minutesDay;
 	}
 
+	public String getRepsAsString() {
+		return String.format("%,d", totalReps);
+	}
+
 	public int getTotalReps() {
 		return totalReps;
 	}

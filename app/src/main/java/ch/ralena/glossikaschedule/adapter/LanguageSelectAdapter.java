@@ -12,25 +12,27 @@ import java.util.List;
 
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.data.LanguageType;
+import io.reactivex.subjects.PublishSubject;
 
 public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAdapter.LanguageViewHolder> {
-	public interface OnLanguageSelectedListener {
-		void onLanguageSelected(LanguageType language);
-	}
-
-	OnLanguageSelectedListener listener;
-
 	List<LanguageType> languages;
 	LanguageType selectedLanguage;
 
-	public LanguageSelectAdapter(List<LanguageType> languages) {
+	PublishSubject<LanguageType> observable = PublishSubject.create();
+
+
+	public PublishSubject<LanguageType> asObservable() {
+		return observable;
+	}
+
+	public LanguageSelectAdapter(List<LanguageType> languages, LanguageType selectedLanguage) {
 		this.languages = languages;
+		this.selectedLanguage = selectedLanguage;
 	}
 
 	@Override
 	public LanguageSelectAdapter.LanguageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_language, parent, false);
-		listener = (OnLanguageSelectedListener) parent.getContext();
 		return new LanguageViewHolder(view);
 	}
 
@@ -63,7 +65,7 @@ public class LanguageSelectAdapter extends RecyclerView.Adapter<LanguageSelectAd
 			itemView.setOnClickListener(view -> {
 				selectedLanguage = language;
 				notifyDataSetChanged();
-				listener.onLanguageSelected(language);
+				observable.onNext(language);
 			});
 			languageName.setText(language.getName());
 			flag.setImageResource(language.getDrawable());

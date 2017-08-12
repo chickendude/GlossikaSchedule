@@ -19,10 +19,21 @@ public class NewScheduleViewScheduleFragment extends Fragment {
 		ScheduleType schedule = getArguments().getParcelable(NewScheduleScheduleFragment.EXTRA_SCHEDULE);
 		// load view
 		View view = inflater.inflate(R.layout.fragment_new_schedule_view_schedule, container, false);
+		// load views
 		TextView title = view.findViewById(R.id.scheduleTitle);
-		title.setText(schedule.getTitle());
+		TextView minutes = view.findViewById(R.id.minutesLabel);
+		TextView reps = view.findViewById(R.id.repsLabel);
+		TextView monthsWeeks = view.findViewById(R.id.monthsWeeksLabel);
 		TextView summary = view.findViewById(R.id.scheduleSummary);
+		TextView description = view.findViewById(R.id.scheduleDescription);
+		// update text
+		title.setText(schedule.getTitle());
+		minutes.setText(schedule.getMinutesDay() + "");
+		reps.setText(schedule.getRepsAsString() + " reps");
+		monthsWeeks.setText(schedule.getCourseLength() + " (" + schedule.getCourseLengthSmall() + ")");
 		summary.setText(schedule.getSummary());
+		description.setText(schedule.getDescription());
+
 		return view;
 	}
 }

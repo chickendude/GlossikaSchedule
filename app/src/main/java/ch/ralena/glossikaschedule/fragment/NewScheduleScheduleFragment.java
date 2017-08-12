@@ -3,6 +3,7 @@ package ch.ralena.glossikaschedule.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,10 @@ public class NewScheduleScheduleFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		ActionBar actionBar =((NewScheduleActivity)getActivity()).getSupportActionBar();
+		actionBar.setTitle("Choose a schedule");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
 		// save inflater
 		this.inflater = inflater;
 
@@ -50,11 +55,6 @@ public class NewScheduleScheduleFragment extends Fragment {
 		circleContainer = view.findViewById(R.id.circleContainer);
 
 		loadMinuteCircles();
-
-//		RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-//		ScheduleSelectAdapter scheduleSelectAdapter = new ScheduleSelectAdapter(schedules);
-//		recyclerView.setAdapter(scheduleSelectAdapter);
-//		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		return view;
 	}
 
@@ -96,7 +96,7 @@ public class NewScheduleScheduleFragment extends Fragment {
 			TextView repsLabel = descriptionView.findViewById(R.id.repsLabel);
 			monthsLabel.setText(scheduleType.getCourseLength());
 			weeksLabel.setText(scheduleType.getCourseLengthSmall());
-			repsLabel.setText(String.format("%,d", scheduleType.getTotalReps()));
+			repsLabel.setText(scheduleType.getRepsAsString());
 			// if it's the last one, don't show the "or"
 			if (++index == schedules.get(minutes).size()) {
 				TextView orLabel = descriptionView.findViewById(R.id.orLabel);
