@@ -10,8 +10,8 @@ android {
 		applicationId "ch.ralena.glossikaschedule"
 		minSdkVersion 19
 		targetSdkVersion 26
-		versionCode 7
-		versionName "1.2.1"
+		versionCode 8
+		versionName "1.2.2"
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	compileOptions {
