@@ -22,6 +22,8 @@ import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static ch.ralena.glossikaschedule.NewScheduleActivity.EXTRA_NEW_SCHEDULE;
+
 public class MainActivity extends AppCompatActivity implements DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
@@ -59,7 +61,9 @@ public class MainActivity extends AppCompatActivity implements DayAdapter.OnItem
 		if (schedules.size() == 0) {
 			loadNewScheduleActivity(false);
 		} else {
-			if (savedInstanceState != null) {
+			if(getIntent().getBooleanExtra(EXTRA_NEW_SCHEDULE, false)) {
+				loadedSchedule = schedules.last();
+			} else if (savedInstanceState != null) {
 				int scheduleIndex = savedInstanceState.getInt(TAG_SCHEDULE_INDEX);
 				loadedSchedule = schedules.get(scheduleIndex);
 			} else {

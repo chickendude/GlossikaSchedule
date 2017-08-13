@@ -18,6 +18,7 @@ public class NewScheduleActivity extends AppCompatActivity {
 	private static final String TAG = NewScheduleActivity.class.getSimpleName();
 	private static final String EXTRA_LANGUAGE = "extra_language";
 	private static final String EXTRA_SCHEDULE = "extra_schedule";
+	public static final String EXTRA_NEW_SCHEDULE = "extra_new_schedule";
 
 
 	// views
@@ -93,6 +94,7 @@ public class NewScheduleActivity extends AppCompatActivity {
 	public void createSchedule(String scheduleTitle) {
 		ScheduleData.createSchedule(realm, selectedSchedule, selectedLanguage, scheduleTitle);
 		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(EXTRA_NEW_SCHEDULE, true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}
