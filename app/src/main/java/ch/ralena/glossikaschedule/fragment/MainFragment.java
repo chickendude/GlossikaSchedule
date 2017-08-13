@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class MainFragment extends Fragment {
 
 	private Schedule schedule;
 	private int currentDayId = -1;
+	private int firstIncompleteDayPosition;
 	private Day currentDay;
 	private ScheduleAdapter adapter;
 	private View rootView;
@@ -82,6 +84,12 @@ public class MainFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d("TAG", "onresume");
+	}
+
+	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		// if it's the first time loading the fragment, show the current day
@@ -115,6 +123,10 @@ public class MainFragment extends Fragment {
 				openDayDialog();
 			}
 		}
+	}
+
+	public void updateAdapter() {
+		adapter.notifyDataSetChanged();
 	}
 
 	// creates the dialog fragment with the day's files

@@ -89,6 +89,7 @@ public class DayFragment extends DialogFragment {
 			MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
 			if (mainFragment != null) {
 				mainFragment.removeHighlight();
+				mainFragment.updateAdapter();
 			}
 		}
 		super.onDismiss(dialog);

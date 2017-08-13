@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.object.Day;
 import io.reactivex.subjects.PublishSubject;
@@ -68,16 +71,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 		}
 
 		public void bindView(Day day, int position) {
+			this.day = day;
 			this.position = position;
-			dayLabel.setText(day.getDayNumber()+"");
+			dayLabel.setText(day.getDayNumber() + "");
 			if (day.isCompleted()) {
 				dateLabel.setText(day.getFormattedDateShort());
 			} else {
-
+				dateLabel.setText(calculateDate(day));
 			}
-			this.day = day;
 			if (day.isCompleted()) {
 				dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+				dateLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 				if (day.wasCompletedToday()) {
 					dayLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
 				} else {
@@ -97,12 +101,39 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 
 		}
 
+		private String calculateDate(Day day1) {
+			int daysLeft = 0;
+			boolean alreadyDone = false;
+			for (Day day : days) {
+				if (day.getFormattedDateShort().equals(getFormattedDate(0))) {
+					alreadyDone = true;
+				}
+				if (!day.isCompleted()) {
+					daysLeft = day1.getDayNumber() - day.getDayNumber();
+					break;
+				}
+			}
+
+			if (!alreadyDone) {
+				// if we haven't completed anything yet today
+				return daysLeft == 0 ? "today" : getFormattedDate(daysLeft);
+			} else {
+				// if we have, we need to make sure counting starts from tomorrow
+				return getFormattedDate(daysLeft + 1);
+			}
+		}
+
+		private String getFormattedDate(int daysLeft) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DAY_OF_YEAR, daysLeft);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+			return dateFormat.format(calendar.getTime());
+		}
+
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				notifyItemChanged(currentPosition);
 				currentPosition = position;
-				notifyItemChanged(currentPosition);
 				observable.onNext(day);
 			}
 		};
