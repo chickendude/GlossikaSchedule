@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import ch.ralena.glossikaschedule.data.LanguageType;
@@ -15,12 +16,14 @@ import io.realm.Realm;
 
 public class NewScheduleActivity extends AppCompatActivity {
 	private static final String TAG = NewScheduleActivity.class.getSimpleName();
+	private static final String EXTRA_LANGUAGE = "extra_language";
+	private static final String EXTRA_SCHEDULE = "extra_schedule";
+
 
 	// views
 	private Toolbar toolbar;
 	// objects
 	private Realm realm;
-	private int currentPage;
 
 	// results passed back in
 	public LanguageType selectedLanguage;
@@ -28,6 +31,8 @@ public class NewScheduleActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate");
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_schedule);
 
@@ -39,11 +44,22 @@ public class NewScheduleActivity extends AppCompatActivity {
 		realm = Realm.getDefaultInstance();
 
 		// load first fragment
-		NewScheduleLanguageFragment fragment = new NewScheduleLanguageFragment();
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragmentContainer, fragment)
-				.commit();
-		currentPage = 0;
+		if (savedInstanceState == null) {
+			NewScheduleLanguageFragment fragment = new NewScheduleLanguageFragment();
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.fragmentContainer, fragment)
+					.commit();
+		} else {
+			selectedLanguage = savedInstanceState.getParcelable(EXTRA_LANGUAGE);
+			selectedSchedule = savedInstanceState.getParcelable(EXTRA_SCHEDULE);
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable(EXTRA_LANGUAGE, selectedLanguage);
+		outState.putParcelable(EXTRA_SCHEDULE, selectedSchedule);
 	}
 
 	@Override
