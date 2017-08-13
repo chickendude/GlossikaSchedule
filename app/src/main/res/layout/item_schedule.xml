@@ -8,16 +8,32 @@
 	android:layout_margin="4dp"
 	app:cardCornerRadius="3dp">
 
-	<TextView
-		android:id="@+id/dayLabel"
+	<LinearLayout
+		android:id="@+id/dayLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/colorPrimaryLight"
 		android:foreground="?android:attr/selectableItemBackground"
-		android:paddingTop="5dp"
+		android:orientation="vertical"
 		android:paddingBottom="5dp"
-		android:textAlignment="center"
-		android:textColor="@android:color/white"
-		android:textSize="20sp"
-		tools:text="1"/>
+		android:paddingTop="5dp">
+
+		<TextView
+			android:id="@+id/dayLabel"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:textAlignment="center"
+			android:textColor="@android:color/white"
+			android:textSize="20sp"
+			tools:text="1"/>
+
+		<TextView
+			android:id="@+id/dateLabel"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:textAlignment="center"
+			android:textColor="@android:color/white"
+			android:textSize="9sp"
+			tools:text="Aug. 30"/>
+	</LinearLayout>
 </android.support.v7.widget.CardView>

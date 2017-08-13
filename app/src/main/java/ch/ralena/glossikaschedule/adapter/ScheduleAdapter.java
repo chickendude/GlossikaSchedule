@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ch.ralena.glossikaschedule.R;
@@ -52,35 +53,46 @@ public class ScheduleAdapter extends RecyclerView.Adapter {
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
+		LinearLayout dayLayout;
 		TextView dayLabel;
+		TextView dateLabel;
 		Day day;
 		int position;
 
 		public ViewHolder(View view) {
 			super(view);
+			dayLayout = view.findViewById(R.id.dayLayout);
 			dayLabel = view.findViewById(R.id.dayLabel);
-			dayLabel.setOnClickListener(onClickListener);
+			dateLabel = view.findViewById(R.id.dateLabel);
+			view.setOnClickListener(onClickListener);
 		}
 
 		public void bindView(Day day, int position) {
 			this.position = position;
 			dayLabel.setText(day.getDayNumber()+"");
+			if (day.isCompleted()) {
+				dateLabel.setText(day.getFormattedDateShort());
+			} else {
+
+			}
 			this.day = day;
 			if (day.isCompleted()) {
 				dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 				if (day.wasCompletedToday()) {
-					dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+					dayLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
 				} else {
-					dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+					dayLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
 				}
 			} else {
-				dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
+				dayLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBackground));
 				dayLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
+				dateLabel.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
 			}
 
 			if (position == currentPosition) {
-				dayLabel.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+				dayLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
 				dayLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+				dateLabel.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 			}
 
 		}

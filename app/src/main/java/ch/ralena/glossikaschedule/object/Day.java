@@ -73,6 +73,15 @@ public class Day extends RealmObject {
 		}
 	}
 
+	public String getFormattedDateShort() {
+		if (dateCompleted > 0) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+			return dateFormat.format(dateCompleted);
+		} else {
+			return "";
+		}
+	}
+
 	public void updateDateCompleted() {
 		if (dateCompleted == 0) {
 			// check if all study items have been completed
