@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements DayAdapter.OnItem
 	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
 	public static final String TAG_SCHEDULE_ID = "schedule_id";
+	private static final String TAG_SCHEDULE_INDEX = "save_schedule_index";
 
 	DrawerLayout drawerLayout;
 	private FragmentManager fragmentManager;
@@ -54,15 +55,28 @@ public class MainActivity extends AppCompatActivity implements DayAdapter.OnItem
 		realm = Realm.getDefaultInstance();
 		schedules = realm.where(Schedule.class).findAll();
 
+		if (savedInstanceState != null) {
+			int scheduleIndex = savedInstanceState.getInt(TAG_SCHEDULE_INDEX);
+			loadedSchedule = schedules.get(scheduleIndex);
+		} else {
+			loadedSchedule = schedules.first();
+		}
+
 		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
 			loadNewScheduleActivity(false);
 		} else {
-			loadMainFragment(schedules.first());
+			loadMainFragment(loadedSchedule);
 		}
 
 		// set up nav drawer
 		setupNavigationDrawer();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		int scheduleIndex = loadedSchedule == null ? 0 : schedules.indexOf(loadedSchedule);
+		outState.putInt(TAG_SCHEDULE_INDEX, scheduleIndex);
 	}
 
 	private void setupNavigationDrawer() {
@@ -83,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements DayAdapter.OnItem
 		drawerToggle.setDrawerIndicatorEnabled(true);
 		drawerLayout.setDrawerListener(drawerToggle);
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.navigationRecyclerView);
-		navigationAdapter = new NavigationAdapter(this, schedules, 0);
+		navigationAdapter = new NavigationAdapter(this, schedules, schedules.indexOf(loadedSchedule));
 		recyclerView.setAdapter(navigationAdapter);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
