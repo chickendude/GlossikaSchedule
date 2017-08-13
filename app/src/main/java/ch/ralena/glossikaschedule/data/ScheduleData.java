@@ -1025,15 +1025,15 @@ public class ScheduleData {
 		return scheduleTypes;
 	}
 
-	public static void createSchedule(Realm realm, int scheduleIndex, String language) {
+	public static void createSchedule(Realm realm, ScheduleType selectedSchedule, LanguageType selectedLanguage, String title) {
 		// get schedule as a 2D list of strings
-		String[][] scheduleStrings = scheduleList.get(scheduleIndex).getSchedule();
+		String[][] scheduleStrings = selectedSchedule.getSchedule();
 		// save schedule into db
 		realm.executeTransaction(r -> {
 			// create schedule object
 			Schedule schedule = r.createObject(Schedule.class, UUID.randomUUID().toString());
-			schedule.setTitle(scheduleList.get(scheduleIndex).getTitle());
-			schedule.setLanguage(language);
+			schedule.setTitle(title);
+			schedule.setLanguage(selectedLanguage.getName());
 			// add all days to the schedule
 			int dayNumber = 1;
 			for (String[] dayItems : scheduleStrings) {

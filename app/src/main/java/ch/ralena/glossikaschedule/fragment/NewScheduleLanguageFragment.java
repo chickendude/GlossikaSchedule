@@ -15,21 +15,18 @@ import ch.ralena.glossikaschedule.R;
 import ch.ralena.glossikaschedule.adapter.LanguageSelectAdapter;
 import ch.ralena.glossikaschedule.data.LanguageData;
 import ch.ralena.glossikaschedule.data.LanguageType;
-import io.realm.Realm;
 
 public class NewScheduleLanguageFragment extends Fragment {
-	private Realm realm;
 	private LanguageType selectedLanguage;
+	NewScheduleActivity activity;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		realm = Realm.getDefaultInstance();
-
 		// get activity
-		NewScheduleActivity newScheduleActivity = ((NewScheduleActivity) getActivity());
+		activity = ((NewScheduleActivity) getActivity());
 		// update action bar
-		ActionBar actionBar = newScheduleActivity.getSupportActionBar();
+		ActionBar actionBar = activity.getSupportActionBar();
 		actionBar.setTitle("Which language are you studying?");
 		actionBar.setDisplayHomeAsUpEnabled(false);
 
@@ -39,12 +36,13 @@ public class NewScheduleLanguageFragment extends Fragment {
 		RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
 		LanguageSelectAdapter languageSelectAdapter = new LanguageSelectAdapter(LanguageData.languages, selectedLanguage);
 		languageSelectAdapter.asObservable().subscribe(language -> {
-				selectedLanguage = language;
-				NewScheduleScheduleFragment fragment = new NewScheduleScheduleFragment();
-				getFragmentManager().beginTransaction()
-						.replace(R.id.fragmentContainer, fragment)
-						.addToBackStack(null)
-						.commit();
+			activity.updateLanguage(language);
+			selectedLanguage = language;
+			NewScheduleScheduleFragment fragment = new NewScheduleScheduleFragment();
+			getFragmentManager().beginTransaction()
+					.replace(R.id.fragmentContainer, fragment)
+					.addToBackStack(null)
+					.commit();
 		});
 		recyclerView.setAdapter(languageSelectAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

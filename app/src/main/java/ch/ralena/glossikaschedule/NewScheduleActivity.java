@@ -1,11 +1,13 @@
 package ch.ralena.glossikaschedule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import ch.ralena.glossikaschedule.data.LanguageType;
+import ch.ralena.glossikaschedule.data.ScheduleData;
 import ch.ralena.glossikaschedule.data.ScheduleType;
 import ch.ralena.glossikaschedule.fragment.NewScheduleConfirmFragment;
 import ch.ralena.glossikaschedule.fragment.NewScheduleLanguageFragment;
@@ -13,7 +15,6 @@ import io.realm.Realm;
 
 public class NewScheduleActivity extends AppCompatActivity {
 	private static final String TAG = NewScheduleActivity.class.getSimpleName();
-	private static final String NEW_SCHEDULE_FRAGMENT_TAG = "new_schedule_fragment";
 
 	// views
 	private Toolbar toolbar;
@@ -22,10 +23,8 @@ public class NewScheduleActivity extends AppCompatActivity {
 	private int currentPage;
 
 	// results passed back in
-	private LanguageType selectedLanguage;
-	private ScheduleType selectedSchedule;
-
-	private String[] titles = {"What language are you studying?", "What schedule do you want?", "Confirm your schedule"};
+	public LanguageType selectedLanguage;
+	public ScheduleType selectedSchedule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +35,8 @@ public class NewScheduleActivity extends AppCompatActivity {
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		// load schedules from database
-//		realm = Realm.getDefaultInstance();
-//		schedules = realm.where(Schedule.class).findAll();
+		// prepare realm object
+		realm = Realm.getDefaultInstance();
 
 		// load first fragment
 		NewScheduleLanguageFragment fragment = new NewScheduleLanguageFragment();
@@ -46,7 +44,6 @@ public class NewScheduleActivity extends AppCompatActivity {
 				.replace(R.id.fragmentContainer, fragment)
 				.commit();
 		currentPage = 0;
-		toolbar.setTitle(titles[currentPage]);
 	}
 
 	@Override
@@ -66,7 +63,22 @@ public class NewScheduleActivity extends AppCompatActivity {
 		NewScheduleConfirmFragment fragment = new NewScheduleConfirmFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.fragmentContainer, fragment)
-				.addToBackStack(null)
 				.commit();
 	}
+
+	public void updateLanguage(LanguageType language) {
+		selectedLanguage = language;
+	}
+
+	public void updateSchedule(ScheduleType schedule) {
+		selectedSchedule = schedule;
+	}
+
+	public void createSchedule(String scheduleTitle) {
+		ScheduleData.createSchedule(realm, selectedSchedule, selectedLanguage, scheduleTitle);
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+	}
+
 }

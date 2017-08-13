@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,16 +19,13 @@ import android.view.View;
 import ch.ralena.glossikaschedule.adapter.DayAdapter;
 import ch.ralena.glossikaschedule.adapter.NavigationAdapter;
 import ch.ralena.glossikaschedule.fragment.MainFragment;
-import ch.ralena.glossikaschedule.fragment.NewScheduleFragment;
 import ch.ralena.glossikaschedule.object.Schedule;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements NewScheduleFragment.OnScheduleCreatedListener, DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
-
+public class MainActivity extends AppCompatActivity implements DayAdapter.OnItemCheckedListener, NavigationAdapter.OnItemClickListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final String MAIN_FRAGMENT_TAG = "main_fragment";
-	private static final String NEW_SCHEDULE_FRAGMENT_TAG = "new_schedule_fragment";
 	public static final String TAG_SCHEDULE_ID = "schedule_id";
 
 	DrawerLayout drawerLayout;
@@ -123,13 +121,6 @@ public class MainActivity extends AppCompatActivity implements NewScheduleFragme
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		}
 		startActivity(intent);
-	}
-
-	@Override
-	public void onScheduleCreated() {
-		getSupportFragmentManager().popBackStack(NEW_SCHEDULE_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		Schedule schedule = realm.where(Schedule.class).findAll().last();
-		loadMainFragment(schedule);
 	}
 
 	@Override

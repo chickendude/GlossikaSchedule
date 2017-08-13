@@ -29,11 +29,13 @@ public class NewScheduleScheduleFragment extends Fragment {
 	private LayoutInflater inflater;
 	private List<View> minuteCircles;
 	private TreeMap<Integer, List<ScheduleType>> schedules;
+	NewScheduleActivity activity;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		ActionBar actionBar =((NewScheduleActivity)getActivity()).getSupportActionBar();
+		activity = (NewScheduleActivity) getActivity();
+		ActionBar actionBar = activity.getSupportActionBar();
 		actionBar.setTitle("Choose a schedule");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -108,6 +110,7 @@ public class NewScheduleScheduleFragment extends Fragment {
 	}
 
 	private void loadScheduleDetails(ScheduleType scheduleType) {
+		activity.updateSchedule(scheduleType);
 		NewScheduleViewScheduleFragment fragment = new NewScheduleViewScheduleFragment();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(EXTRA_SCHEDULE, scheduleType);

@@ -4,17 +4,15 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
 			  android:orientation="vertical"
-			  android:paddingTop="8dp">
+			  android:padding="8dp">
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="You are studying:"
-		android:textSize="20sp"/>
 
 	<LinearLayout
+		android:id="@+id/languageLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:gravity="center"
 		android:orientation="horizontal">
 
 		<ImageView
@@ -38,14 +36,45 @@
 	</LinearLayout>
 
 	<TextView
+		android:id="@+id/scheduleTitleLabel"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Your schedule:"
-		android:textSize="20sp"/>
+		android:layout_margin="8dp"
+		android:textAlignment="center"
+		android:textSize="20sp"
+		tools:text="9-Month Intensive"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_margin="8dp"
+		android:background="@color/colorTextLight"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_margin="8dp"
+		android:layout_weight="1"/>
 
 	<EditText
 		android:id="@+id/scheduleTitle"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="Enter your schedule's title"/>
+		android:hint="Enter your schedule's title"
+		android:textAlignment="center"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_margin="8dp"
+		android:layout_weight="1"/>
+
+	<Button
+		android:id="@+id/createScheduleButton"
+		style="@style/Widget.AppCompat.Button.Colored"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Create Schedule"
+		android:textAllCaps="false"
+		android:textSize="20sp"/>
 </LinearLayout>
