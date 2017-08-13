@@ -26,11 +26,9 @@ public class MainFragment extends Fragment {
 	private static final String TAG = MainFragment.class.getSimpleName();
 	public static final String TAG_DAY_ID = "tag_day_id";
 	private static final String DAY_FRAGMENT_TAG = "day_fragment";
-	private static final String TAG_ARE_EMPTY = "tag_are_empty";
 
 	private Schedule schedule;
 	private int currentDayId = -1;
-	private int firstIncompleteDayPosition;
 	private Day currentDay;
 	private ScheduleAdapter adapter;
 	private View rootView;
@@ -109,6 +107,7 @@ public class MainFragment extends Fragment {
 	// loads a dialog fragment with checkboxes for the recordings you need to study for that day
 	public void showDay(Day day) {
 		currentDay = day;
+		adapter.notifyItemChanged(schedule.getSchedule().indexOf(day));
 		if (isDialogReady) {
 			if (areEmptyDays()) {
 				askToFillInDays();
