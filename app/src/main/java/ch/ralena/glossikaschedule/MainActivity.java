@@ -55,17 +55,16 @@ public class MainActivity extends AppCompatActivity implements DayAdapter.OnItem
 		realm = Realm.getDefaultInstance();
 		schedules = realm.where(Schedule.class).findAll();
 
-		if (savedInstanceState != null) {
-			int scheduleIndex = savedInstanceState.getInt(TAG_SCHEDULE_INDEX);
-			loadedSchedule = schedules.get(scheduleIndex);
-		} else {
-			loadedSchedule = schedules.first();
-		}
-
 		// if we don't have any schedules yet, request to create one, otherwise load the first schedule
 		if (schedules.size() == 0) {
 			loadNewScheduleActivity(false);
 		} else {
+			if (savedInstanceState != null) {
+				int scheduleIndex = savedInstanceState.getInt(TAG_SCHEDULE_INDEX);
+				loadedSchedule = schedules.get(scheduleIndex);
+			} else {
+				loadedSchedule = schedules.first();
+			}
 			loadMainFragment(loadedSchedule);
 		}
 
