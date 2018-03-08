@@ -50,6 +50,7 @@ public class LanguageData {
 		languages.add(new LanguageType("Spanish (Mexico)", R.drawable.flag_spanish_mexico));
 		languages.add(new LanguageType("Spanish (Spain)", R.drawable.flag_spanish_spain));
 		languages.add(new LanguageType("Swahili", R.drawable.flag_none));
+		languages.add(new LanguageType("Swedish", R.drawable.flag_sweden));
 		languages.add(new LanguageType("Tagalog", R.drawable.flag_tagalog));
 		languages.add(new LanguageType("Thai", R.drawable.flag_thai));
 		languages.add(new LanguageType("Turkish", R.drawable.flag_turkish));
